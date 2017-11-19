@@ -8,7 +8,7 @@ export default class List extends Component{
             <div>
                 <MyHeader showBack={true} title="商城"/>
                 <div className='my-container'>
-                    列表页 <br/>
+                    列表页史萧萧 <br/>
                     <Link to="/details">商品详情</Link>
                 </div>
             </div>
