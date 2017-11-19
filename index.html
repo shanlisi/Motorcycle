@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Motorcycle</title>
+    <script>
+        ~function () {
+            window.addEventListener('resize', computed, false);
+            computed();
+            function computed() {
+                let deviceW = document.documentElement.clientWidth;
+                if (deviceW > 750) return;
+                document.documentElement.style.fontSize = deviceW / 750 * 100 + 'px';
+            }
+        }();
+    </script>
+</head>
+<body>
+<div id="root">
+</div>
+</body>
+</html>
