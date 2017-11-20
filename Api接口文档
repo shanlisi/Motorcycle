@@ -1,0 +1,38 @@
+###1.获取首页轮播图
+```
+地址:/home/swipers
+类型:GET
+返回结果：
+{
+    code:0/1 //0:成功 1:失败
+    swipers:[
+        {
+        title:'标题',
+        image:'图片地址',
+        url:'跳转路径'
+        }
+    ...]
+}
+```
+###2.获取首页列表
+```
+地址:/home/articleList?offset=0&limit=10
+    offset:获取数据数组的起始量
+    limit:每次获取数据的数量
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败
+    hsaMore:true/false,//是否有更多数据
+    articleList:[
+        {
+        title:'标题',
+        image:'图片地址',
+        url:'跳转路径',
+        date:'发布时间',
+        num:'评价数量',
+        flag:'分类'
+        }
+    ...]
+}
+```
