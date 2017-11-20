@@ -1,6 +1,7 @@
-//home 数据
-let  prefix='http://localhost:3000/public/';
+//获取访问静态资源服务器的域名
+let  prefix=require('./prefix');
 
+//轮播图数据
 let swipers= [
         {
             title: '杜卡迪将在米兰车展发布Scrambler1100',
@@ -34,6 +35,7 @@ let swipers= [
         }
     ];
 
+//首页文章列表数据
 let articleList=[
         {
             title:'最大马力210匹！机械增压旅行车川崎Ninja H2 SX，米兰车展发布',

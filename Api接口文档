@@ -4,12 +4,12 @@
 类型:GET
 返回结果：
 {
-    code:0/1 //0:成功 1:失败
+    code:0/1 //0:成功 1:失败[Number]
     swipers:[
         {
-        title:'标题',
-        image:'图片地址',
-        url:'跳转路径'
+        title:'标题',[String]
+        image:'图片地址',[String]
+        url:'跳转路径',[String]
         }
     ...]
 }
@@ -17,21 +17,63 @@
 ###2.获取首页列表
 ```
 地址:/home/articleList?offset=0&limit=10
-    offset:获取数据数组的起始量
-    limit:每次获取数据的数量
+    offset:获取数据数组的起始量，默认0
+    limit:每次获取数据的数量，默认10
 类型:GET
 返回结果：
 {
-    code:0/1, //0:成功 1:失败
-    hsaMore:true/false,//是否有更多数据
+    code:0/1, //0:成功 1:失败[Number]
+    hsaMore:true/false,//是否有更多数据[Boolean]
     articleList:[
         {
-        title:'标题',
-        image:'图片地址',
-        url:'跳转路径',
-        date:'发布时间',
-        num:'评价数量',
-        flag:'分类'
+        title:'标题',[String]
+        image:'图片地址',[String]
+        url:'跳转路径',[String]
+        date:'发布时间',[String]
+        num:'评价数量',[String]
+        flag:'分类',[String]
+        }
+    ...]
+}
+```
+###3.获取商品列表
+```
+地址:/productList/getList?offset=0&limit=10
+    offset:获取数据数组的起始量，默认0
+    limit:每次获取数据的数量，默认5
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    hsaMore:true/false,//是否有更多数据[Boolean]
+    productList:[
+        {
+        id:'商品id',[Number]
+        title:'标题',[String]
+        image:'图片地址',[String]
+        date:'上架时间',[String]
+        price:'价格',[Number]
+        hot:'热度',[Number]
+        }
+    ...]
+}
+```
+###4.筛选商品列表
+```
+地址:/productList/filterList?value='本田'
+    value:'用户的检索字段'
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    productList:[
+        {
+        id:'商品id',[Number]
+        title:'标题',[String]
+        image:'图片地址',[String]
+        date:'上架时间',[String]
+        price:'价格',[Number]
+        hot:'热度',[Number]
         }
     ...]
 }
