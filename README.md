@@ -10,6 +10,7 @@
 根据路由跳转路径的中的路由参数来确定当前要展示的商品 比如 /detail/:productId 
 在组件挂载之后向服务端发送请求 并将商品 ID 发送至服务端 获取商品数据 并将商品数据保存至组件的状态中
 #### 商品的字段
++ 商品 id id [Number]
 + 商品名称 productName [String]
 + 商品单价 productPrice [Number]
 + 商品已售数量 selledAmount [Number]
