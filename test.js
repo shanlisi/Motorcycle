@@ -1,1 +1,1 @@
-console.log('新大洲本田hahhah哈哈哈'.includes('本田'));
+console.log([{name:1},{name:2}].find(item=>item.name==1));

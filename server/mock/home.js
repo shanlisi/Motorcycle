@@ -1,5 +1,5 @@
 //获取访问静态资源服务器的域名
-let  prefix=require('./prefix');
+let  {prefix}=require('./prefix');
 
 //轮播图数据
 let swipers= [

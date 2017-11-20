@@ -1,13 +1,29 @@
 let express =require('express');
 let app=express();
-let port=3000;
 let bodyParser =require('body-parser');
 let cookieParser=require('cookie-parser');
+//服务端口号
+let port=3000;
+//允许前端跨域访问的域名
+let  {prefixOfWebpack}=require('./mock/prefix');
 
 //得到首页的相关数据
 let {swipers,articleList} =require('./mock/home');
 //得到商品列表页的相关数据
-let {productList} =require('./mock/products');
+let {productList,products} =require('./mock/products');
+
+//跨域授权设置
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin',prefixOfWebpack);
+    res.header('Access-Control-Allow-Methods','GET,POST,OPTIONS,PUT,DELETE');
+    res.header("Access-Control-Allow-Headers","Content-Type");
+    res.header('Access-Control-Allow-Credentials','true');
+    if(req.method.toUpperCase()==="OPTIONS"){
+        res.end()
+    }else{
+        next()
+    }
+});
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json({extended:false}));
@@ -50,19 +66,70 @@ app.get('/productList/getList',function (req, res) {
     let list=productList.slice(offset,offset+limit);
     res.json({code:0,productList:list,hasMore:hsaMore})
 });
+//筛选商品列表
 app.get('/productList/filterList',function (req, res) {
-    let value=req.query.value.substr(1,req.query.value.length-2);
-    console.log(value);
+    let value=req.query.value;
     if(!value){
-        res.json({code:1,error:'暂无相关内容'});
+        res.json({code:1,error:'请按照规定请求数据，例.../productList/filterList?value=本田'});
         return;
     }
     let list=productList.filter(item=>{
         return item.title.includes(value)
     });
-    res.json({code:0,productList:list})
+    if(list.length===0){
+        res.json({code:1,error:'暂无相关内容'});
+    }else{
+        res.json({code:0,productList:list})
+    }
+
 });
 
+//商品详情
+app.get('/productDetail/:id',function (req, res) {
+    let id=req.params.id;
+    if(isNaN(Number(id)) ){
+        res.json({code:1,error:'参数ID必须是数字，例.../productDetail/1'});
+        return;
+    }
+    if((products[id-1])&&(products[id-1].id=id)){
+        res.json({code:0,product:products[id-1]})
+    }else{
+        let product=products.find(item=>item.id==id);
+        if(product){
+            res.json({code:0,product:product})
+        }else{
+            res.json({code:1,error:'未找到相关数据'});
+        }
+    }
+});
+
+//购物车查增删改
+app.route('/shoppingCart').get(function (req,res) {
+
+}).post(function (req,res) {
+
+}).delete(function (req,res) {
+
+}).put(function (req, res) {
+
+});
+//获取用户信息
+app.get('/user/:id',function (req, res) {
+    let id=req.params.id;
+});
+//修改用户信息
+app.put('/users',function (req,res) {
+
+});
+
+//注册
+app.post('/signup',function (req, res) {
+
+});
+
+app.post('/login',function (req, res) {
+
+});
 
 app.listen(port,function () {
     console.log(`正在监听${port}端口`);

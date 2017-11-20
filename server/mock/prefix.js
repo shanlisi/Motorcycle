@@ -1,3 +1,5 @@
 
 //后端访问静态资源域名前缀
-module.exports='http://localhost:3000/public/';
+let prefix='http://localhost:3000/public/';
+let prefixOfWebpack='http://localhost:8555';
+module.exports={prefix};
