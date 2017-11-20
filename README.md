@@ -28,3 +28,5 @@
 + 商品型号 type [String]
 + 购买数量 quantity [Number] default 1
 + 小计 subtotal [Number] quantity * productPrice
+
+测试用例
