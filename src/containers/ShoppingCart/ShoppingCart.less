@@ -1,0 +1,98 @@
+.shop-cart-container {
+    background-color: rgb(235, 233, 233);
+
+    .shop-cart {
+
+        .cart-item {
+            background-color: #fff;
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            margin-top: 2px;
+
+            .item-name {
+                height: 40px;
+                line-height: 40px;
+                text-indent: 10px;
+                font-weight: normal;
+            }
+            .item-body {
+                height: 80px;
+                border-top: 1px solid #ccc;
+                border-bottom: 1px solid #ccc;
+                padding: 6px;
+                .selected {
+                     
+                    width: 10%;
+                    height: 100%;
+                    line-height: 80px;
+                    text-align: center;
+                    float: left;
+                    input {
+
+                    }
+                }
+                .item-img {
+                    width: 25%;
+                    height: 100%;
+                    float: left;
+                    img {
+
+                    }
+                }
+                .item-body-content {
+                    position: relative;
+                    width: 60%;
+                    float: left;
+                    p {
+                        font-size: 0.2rem;
+                    }
+                    .counter { 
+                        margin-top: 3px;
+                        button {
+                            width: 20px;
+                            height: 20px;
+                            background-color: rgb(228, 228, 228);
+                           
+                        }
+                        input {
+                            width: 20px;
+                            height: 20px;
+                            background-color: rgb(228, 228, 228);
+                            border: none;
+                            margin: 0 1px;
+                            outline: njo;
+                            outline: none;
+                            text-align: center;
+                        }
+                    }
+                    .delete-icon {
+                        font-size: 0.2rem;
+                        background-color: rgb(78, 163, 163);
+                        padding: 2px 8px;
+                        position: absolute;
+                        right: 10px;
+                        bottom: 0;
+                    }
+
+                }
+
+            }
+            .item-footer {
+                height: 40px;
+                line-height: 40px;
+                font-size: 0.2rem;
+                font-weight: normal;
+                padding: 0 15px;
+                span {
+                    strong {
+                        font-weight: normal;
+                    }
+                }
+                span:nth-child(2) {
+                    float: right;
+                }
+            }
+        }
+    }
+}
