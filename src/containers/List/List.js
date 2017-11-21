@@ -3,73 +3,27 @@ import {Link} from 'react-router-dom'
 import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import {myGet} from '../../api/index'
 
 export default class List extends Component {
     constructor() {
         super();
         this.state = {
             isShow: false,
-            data: [
-                {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 1,
-                    date: 1,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                },
-                {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 2,
-                    date: 2,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-                {
-                    name: "铃木GD110",
-                    price: 2100,
-                    id: 3,
-                    date: 3,
-                    sell: 25999,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/13188/2017092118190467499_S.jpg'
-                },
-                {
-                    name: "GW250S(摩旅)",
-                    price: 2200,
-                    id: 4,
-                    date: 4,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-08/13188/2017082417075766135_S.jpg'
-                }, {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 5,
-                    date: 5,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                }, {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 6,
-                    date: 6,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-            ]
+            productList: [], id: ''
         }
     }
-
     /**
      * 升序排列
      * @param propertyName
      * @returns {Function}
      */
     upSort = (propertyName) => {
-        if ((typeof this.state.data[0][propertyName]) != "number") {
+        if ((typeof  this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
+                console.log(value1, value2);
                 return value1.localeCompare(value2);
             }
         } else {
@@ -79,15 +33,14 @@ export default class List extends Component {
                 return value2 - value1;
             }
         }
-    }
-
+    };
     /**
      * 降序排列
      * @param propertyName
      * @returns {Function}
      */
     downSort = (propertyName) => {
-        if ((typeof this.state.data[0][propertyName]) != "number") {
+        if ((typeof this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
@@ -101,11 +54,10 @@ export default class List extends Component {
                 return value1 - value2;
             }
         }
-    }
+    };
     handleClick = () => {
         this.setState({isShow: !this.state.isShow})
     };
-
     /**
      * 排序
      * @param prop 排序的属性
@@ -113,27 +65,33 @@ export default class List extends Component {
      */
     sort = (prop, isUpSort) => {
         if (isUpSort) {
-            this.state.data.sort(this.upSort(prop));
+            this.state.productList.sort(this.upSort(prop));
         } else {
-            this.state.data.sort(this.downSort(prop));
+            this.state.productList.sort(this.downSort(prop));
         }
 
-        this.setState({data: this.state.data});
+        this.setState({productList: this.state.productList});
     };
-
-    /**
-     * 搜索
-     */
-    search = (prop) => {
-        prop = "2300";
-        let newArry = this.state.data.filter(function (item) {
-                let price = item.price.toString();
-                return item.name.indexOf(prop) == "-1" ? (
-                    price.indexOf(prop) == "-1" ? false : true
-                ) : true;
+    change = () => {
+        var offset = 0;
+        var limit = 8;
+        myGet('/productList/getList?offset=' + offset + '&limit=' + limit).then(res => {
+                this.setState({...this.state, productList: res.productList});
             }
-        )
-        this.setState({data: newArry});
+        );
+    }
+    componentDidMount() {
+        this.change();
+    };
+    search = () => {
+        myGet('/productList/filterList?value=' + ipt.value).then(res => {
+            console.log(res);
+            if (res.code == 1) {
+                this.setState({...this.state, productList: []});
+            } else {
+                this.setState({...this.state, productList: res.productList});
+            }
+        })
     };
 
     render() {
@@ -144,13 +102,17 @@ export default class List extends Component {
                 <div className='my-container'>
                     <div className='list'>
                         <div className='title'>
-                            <input type="text" placeholder='搜索商品'/>
-                            <span className='search-span' onClick={() => {
-                                this.search()
-                            }}></span>
+                            <input type="text" placeholder='搜索商品' id='ipt' onChange={
+                                () => {
+                                    ipt.value.length == 0;
+                                    this.change();
+                                }
+                            }/>
+                            <span className='search-span iconfont icon-search'
+                                  onClick={this.search}></span>
                             <div className='sort' onClick={this.handleClick}>
                                 {this.state.isShow
-                                    ? <span className='close'>x</span> : <span className='classify'>销量排序</span>}
+                                    ? <span className='close'>&times;</span> : <span className='classify'>销量排序</span>}
                             </div>
                             <TransitionGroup>
                                 {this.state.isShow ?
@@ -165,11 +127,11 @@ export default class List extends Component {
                                             }}>最便宜
                                             </li>
                                             <li onClick={() => {
-                                                this.sort('date', true)
+                                                this.sort('date', false)
                                             }}>最新上市
                                             </li>
                                             <li onClick={() => {
-                                                this.sort('sell', true)
+                                                this.sort('hot', true)
                                             }}>最热门
                                             </li>
                                         </ul>
@@ -178,13 +140,17 @@ export default class List extends Component {
                         </div>
                         <div className='all-product'>
                             <ul className='main'>
-                                {this.state.data.map((item, index) => (
+                                {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index}>
-                                        <Link to="/details"><img src={item.url}></img></Link>
+
+
+                                        {/* 增加查询参数 id  */}
+                                        <Link to={"/details/" + item.id }><img src={item.url}></img></Link>
                                         <p className='product-name'>{item.name}</p>
+
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
-                                ))
+                                )) : <li>没有搜索到内容</li>
                                 }
 
                             </ul>

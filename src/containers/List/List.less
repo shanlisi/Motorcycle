@@ -24,13 +24,15 @@
       box-sizing: border-box;
       float: left;
       margin-top:.14rem;
-     }
+    }
     .search-span{
       margin-top:.14rem;
       display: inline-block;
-      width:.5rem;
+      width:.55rem;
       height: 0.58rem;
-      background:lightseagreen;
+      position: absolute;
+      top:-.1rem;
+      left: 3.5rem;
     }
     .sort{
       float: right;
@@ -53,11 +55,12 @@
         background:#eaebed;
         border-radius:.10rem;
         text-align: center;
-        line-height: 0.58rem;
-        padding: .05rem .08rem;
+        line-height: 0.5rem;
+        //padding: .05rem .08rem;
         box-sizing: border-box;
         color:#757575;
-         }
+        font-size: .6rem;
+      }
     }
     ul{
       position: absolute;
@@ -66,6 +69,8 @@
       margin-top:.2rem;
       left: 0;
       background: #fff;
+      padding:0 .24rem;
+      box-sizing: border-box;
       li{
         border-bottom:1px solid #757575;
         color:#757575;
@@ -73,8 +78,8 @@
         height: .74rem;
         &:hover{
           color:red;
-          }
         }
+      }
     }
   }
   .all-product{
@@ -110,29 +115,26 @@
           font-size: .30rem;
           font-weight: 600;
           margin-top: .24rem;
-          margin-left:  0.24rem;
+          margin-left: 0.24rem;
+          white-space:nowrap;
+          text-overflow:ellipsis;
+          overflow: hidden;
         }
         .price{
           color:red;
-          margin: .3rem 0  .2rem .24rem;
+          margin: .3rem 0 .2rem .24rem;
         }
       }
     }
   }
 
-
 }
-
-
-
-
-
 
 .fadeIn-enter{
   opacity:0;
 }
 .fadeIn-enter-active{
-   opacity: 1;
+  opacity: 1;
   transition: all 1s;
 }
 .fadeIn-exit.fadeIn-exit-active{

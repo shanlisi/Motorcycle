@@ -1,14 +1,27 @@
 import React,{Component} from 'react';
 import ReactSwipe from 'react-swipe';
 import './index.less';
+import {myGet} from '../../../api/index';
 
 export default class Slider extends Component{
     constructor(){
         super();
-        this.state={index:0};
+        this.state={
+            swipers:[],
+        };
+    }
+    componentDidMount(){
+        myGet('/home/swipers').then(res=>{
+            //console.log(res);
+            if(res.code===0){
+                this.setState({
+                    ...this.state.swipers,
+                    swipers:res.swipers
+                })
+            }
+        })
     }
     render(){
-
         let swipeOptions={
             continuous:true,
             auto:1000,
@@ -16,27 +29,35 @@ export default class Slider extends Component{
                 this.setState({index})
             }
         };
+        console.log(this.state.swipers);
         return(
             <div className="carousel-wrapper">
                 {
-                    this.props.sliders.length>0?
-                        <ReactSwipe className="carousel" swipeOptions={swipeOptions}>
+                         this.state.swipers.length>0?
+                         <ReactSwipe className="carousel" swipeOptions={swipeOptions}>
                             {
-                                this.props.sliders.map((item,index)=>(
-                                    <div key={index}>
-                                        <img src={item}/>
+                                this.state.swipers.map((item,index)=>(
+                                <a key={index} href={item.url}>
+                                    <div >
+                                        <img src={item.image}/>
+                                        <div className="title">
+                                            <p>{item.title}</p>
+                                        </div>
                                     </div>
+                                </a>
                                 ))
                             }
-                        </ReactSwipe>:null
+                            </ReactSwipe>:null
+
                 }
+
                 <div className="dots">
                     {
-                        this.props.sliders.map((item,index)=>(
-                            <span
-                                key={index}
-                                className={this.state.index==index?'active':''}>
-                            </span>
+                        this.state.swipers.map((item,index)=>(
+                                <span
+                                    key={index}
+                                    className={this.state.index==index?'active':''}>
+                                </span>
                         ))
                     }
                 </div>
