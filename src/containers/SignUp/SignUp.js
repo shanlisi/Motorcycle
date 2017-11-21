@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import './SignUp.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {Link} from 'react-router-dom';
-import $ from 'jquery';
 import {myPost} from '../../api/index';
 export default class SignUp extends Component{
     constructor(){
