@@ -11,9 +11,10 @@ export default Mock.mock( "http://g.cn", {
     "selledAmount|1-100": 1,
     "addTime": "@date('yyyy年MM月dd日')",
     "pictures": "@image('320x200')",
-    "desc": "@paragraph",
+    "desc|5-8": [ "@image( '320x200' )" ],
     "seller": "@name",
-    "typeModel|3-5": [ "@word" ],
+    "typeModel|3-5": [ { "type": "@word", "hasSelected": false }  ],
     "inventory|1-100": 1,
-    "sellerAddress": "@province@city@county"
+    "sellerAddress": "@province@city@county",
+    "commentRate|50-100": 1
 })
