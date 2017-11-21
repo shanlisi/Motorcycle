@@ -144,7 +144,7 @@ app.put('/users',function (req,res) {
 app.post('/signup',function (req, res) {
     let {userName,password, phone=''}=req.body;
     if(!userName||!password){
-        res.json({code:1,error:'userName和password必须上传'})
+        res.json({code:1,error:'userName和password必须上传'});
         return;
     }
     getUsersInfo(function (userInfo) {

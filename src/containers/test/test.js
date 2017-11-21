@@ -6,8 +6,8 @@ import {myPost} from '../../api/index'
 export default class Login extends Component{
 
     handleClick=()=>{
-        myPost('/login',{userName:'shanlisi2',password:19940319
-    }).then(res=>{
+        myPost('/signup',{userName:'shanlisi2',password:19940319
+        }).then(res=>{
             console.log(res,typeof res);})
     };
     render(){
