@@ -1,0 +1,125 @@
+.mine-bg {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #f8f8f8;
+  display: flex;
+  flex-direction: column;
+  .mine-header {
+    height: 2.4rem;
+    background-color: #fa5801;
+    padding: .25rem;
+    box-sizing: border-box;
+    font-size: .32rem;
+    font-weight: lighter;
+    display: flex;
+    align-items: center;
+    .mine-left {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-right: .30rem;
+      img {
+        border-radius: 50%;
+        margin-bottom: .25rem;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+      span {
+        display: inline-block;
+        height: .40rem;
+        line-height: .40rem;
+        padding: 0 .05rem;
+        width: .7rem;
+        font-size: .22rem;
+        background-color: #fff;
+        border-radius: .05rem;
+        color: #fa5801;
+      }
+
+    }
+    .mine-cen {
+      flex: 50%;
+      color: #fff;
+      div {
+        margin: .2rem 0;
+        width: 1.45rem;
+        height: .45rem;
+        line-height: .45rem;
+        text-align: center;
+        color: #555555;
+        font-size: .28rem;
+        background-color: #fff;
+        border-radius: .5rem;
+      }
+      span {
+        padding-right: .3rem;
+      }
+    }
+    .mine-right {
+      display: flex;
+      flex-direction: column;
+      a:first-child {
+       text-decoration: none;
+        color: #fff;
+
+
+      }
+      a:last-child {
+       padding: .4rem 0;
+        i {
+          text-align: center;
+          color: #fff;
+          font-size: .5rem;
+        }
+      }
+
+    }
+  }
+  .mine-nav {
+    margin: .1rem 3%;
+    width: 94%;
+    border-radius: .05rem;
+    border: .01rem solid #ddd;
+    background: #fff;
+    overflow: hidden;
+    padding: 0 .1rem;
+    box-sizing: border-box;
+    margin-top: .3rem;
+    li {
+      font-size: .32rem;
+      border-bottom: 1px solid #ddd;
+      height: 1.12rem;
+      overflow: hidden;
+      a {
+        display: inline-block;
+        line-height: 1.12rem;
+        width: 100%;
+      }
+      i:first-child {
+        width: .8rem;
+        height: .8rem;
+        text-align: center;
+        float: left;
+        color: #fa5801;
+        font-size: .50rem;
+      }
+      span {
+        color: #000;
+        margin-left: 2%;
+      }
+      i:last-child {
+        float: right;
+        text-align: center;
+        color: #555;
+        font-size: .70rem;
+      }
+
+    }
+  }
+}

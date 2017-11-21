@@ -1,0 +1,131 @@
+//input {
+//  -webkit-user-select: text;
+//  -ms-user-select: text;
+//  user-select: text;
+//  font-size: 1em;
+//  line-height: 1.5em;
+//  list-style: none;
+//}
+//
+//input, textarea {
+//  outline: none;
+//  border: none;
+//  background: none;
+//  margin: 0;
+//  padding: 0;
+//}
+
+textarea {
+  resize: none
+}
+
+.profile-bg {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #f8f8f8;
+
+  .profile-top {
+    height: 6.8rem;
+    background-color: #fff;
+    border-top: 0.01rem solid #e1e1e1;
+    display: flex;
+    flex-direction: column;
+    div {
+      height: 2rem;
+      box-sizing: border-box;
+      border-bottom: 0.01rem solid #e1e1e1;
+      display: flex;
+      align-items: center;
+      padding: 0 .4rem;
+      label {
+        flex: 20%;
+        font-size: .34rem;
+
+      }
+      input {
+        outline: none;
+        border: none;
+        background: none;
+        margin: 0;
+        padding: 0;
+        flex: 70%;
+        width: 6rem;
+        height: 0.9rem;
+        font-size: .32rem;
+      }
+    }
+    .pro-ind {
+      height: 4rem;
+      label {
+        flex: 25%;
+
+      }
+      textarea {
+        outline: none;
+        border: none;
+        background: none;
+        margin: 0;
+        padding: 0;
+        flex: 75%;
+        height: 2rem;
+      }
+    }
+    .pro-sex {
+      height: 2rem;
+      box-sizing: border-box;
+      border-bottom: 0.01rem solid #e1e1e1;
+      display: flex;
+      align-items: center;
+      padding: 0 .4rem;
+      form {
+        flex: 25%;
+        font-size: .34rem;
+      }
+      label {
+        width: .3rem;
+        height: .4rem;
+        flex: 35%;
+        display: flex;
+        align-items: center;
+
+        input {
+          outline: none;
+          border: none;
+          background: none;
+          margin: 0;
+          padding: 0;
+          width: .3rem;
+          height: .4rem;
+          margin-left: .1rem;
+        }
+
+      }
+    }
+
+  }
+
+  .profile-btn {
+    width: 100%;
+    padding: .3rem 8%;
+
+    button {
+      width: 84%;
+      height: 0.9rem;
+      background: #fa5801;
+      font-size: .4rem;
+      border-radius: .05rem;
+      a {
+        text-decoration: none;
+        color: #fff;
+      }
+    }
+
+  }
+}
+
+
+
