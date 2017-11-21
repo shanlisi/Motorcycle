@@ -3,73 +3,27 @@ import {Link} from 'react-router-dom'
 import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
-
+import {myGet} from '../../api/index'
 export default class List extends Component {
     constructor() {
         super();
         this.state = {
             isShow: false,
-            data: [
-                {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 1,
-                    date: 1,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                },
-                {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 2,
-                    date: 2,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-                {
-                    name: "铃木GD110",
-                    price: 2100,
-                    id: 3,
-                    date: 3,
-                    sell: 25999,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/13188/2017092118190467499_S.jpg'
-                },
-                {
-                    name: "GW250S(摩旅)",
-                    price: 2200,
-                    id: 4,
-                    date: 4,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-08/13188/2017082417075766135_S.jpg'
-                }, {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 5,
-                    date: 5,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                }, {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 6,
-                    date: 6,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-            ]
+            productList: [],
+            val:''
         }
     }
-
     /**
      * 升序排列
      * @param propertyName
      * @returns {Function}
      */
     upSort = (propertyName) => {
-        if ((typeof this.state.data[0][propertyName]) != "number") {
+        if ((typeof  this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
+                console.log(value1,value2);
                 return value1.localeCompare(value2);
             }
         } else {
@@ -79,15 +33,14 @@ export default class List extends Component {
                 return value2 - value1;
             }
         }
-    }
-
+    };
     /**
      * 降序排列
      * @param propertyName
      * @returns {Function}
      */
     downSort = (propertyName) => {
-        if ((typeof this.state.data[0][propertyName]) != "number") {
+        if ((typeof this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
@@ -101,7 +54,7 @@ export default class List extends Component {
                 return value1 - value2;
             }
         }
-    }
+    };
     handleClick = () => {
         this.setState({isShow: !this.state.isShow})
     };
@@ -113,29 +66,39 @@ export default class List extends Component {
      */
     sort = (prop, isUpSort) => {
         if (isUpSort) {
-            this.state.data.sort(this.upSort(prop));
+            this.state.productList.sort(this.upSort(prop));
         } else {
-            this.state.data.sort(this.downSort(prop));
+            this.state.productList.sort(this.downSort(prop));
         }
 
-        this.setState({data: this.state.data});
+        this.setState({productList: this.state.productList});
     };
-
     /**
      * 搜索
      */
     search = (prop) => {
         prop = "2300";
-        let newArry = this.state.data.filter(function (item) {
+        let newArry = this.state.productList.filter(function (item) {
                 let price = item.price.toString();
                 return item.name.indexOf(prop) == "-1" ? (
                     price.indexOf(prop) == "-1" ? false : true
                 ) : true;
-            }
-        )
-        this.setState({data: newArry});
+            })
+        this.setState({productList: newArry});
     };
-
+     componentDidMount(){
+         var offset=0;
+         var  limit=8;
+         myGet('/productList/getList?offset='+offset+'&limit='+limit).then(res=>{
+           this.setState({...this.state,productList:res.productList});
+         }
+            )
+        };
+     //获取input里面的值
+    handleChange=(event)=>{
+        let  number=event.target.value;
+        this.setState({...this.state,val:number})
+    };
     render() {
         //升序
         return (
@@ -144,7 +107,7 @@ export default class List extends Component {
                 <div className='my-container'>
                     <div className='list'>
                         <div className='title'>
-                            <input type="text" placeholder='搜索商品'/>
+                            <input type="text" placeholder='搜索商品' onChange={this.handleChange}  value={this.state.val}/>
                             <span className='search-span' onClick={() => {
                                 this.search()
                             }}></span>
@@ -165,11 +128,11 @@ export default class List extends Component {
                                             }}>最便宜
                                             </li>
                                             <li onClick={() => {
-                                                this.sort('date', true)
+                                                this.sort('date', false)
                                             }}>最新上市
                                             </li>
                                             <li onClick={() => {
-                                                this.sort('sell', true)
+                                                this.sort('hot', true)
                                             }}>最热门
                                             </li>
                                         </ul>
@@ -178,14 +141,13 @@ export default class List extends Component {
                         </div>
                         <div className='all-product'>
                             <ul className='main'>
-                                {this.state.data.map((item, index) => (
+                                {this.state.productList.map((item, index) => (
                                     <li key={index}>
-                                        <Link to="/details"><img src={item.url}></img></Link>
-                                        <p className='product-name'>{item.name}</p>
+                                        <Link to="/details"><img src={item.image}></img></Link>
+                                        <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
-                                ))
-                                }
+                                ))}
 
                             </ul>
                         </div>
