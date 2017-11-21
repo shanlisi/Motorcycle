@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
-import './Login.less'
+import '../Login/Login.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {myPost} from '../../api/index'
 
-export default class Login extends Component{
+export default class Test extends Component{
 
     handleClick=()=>{
         myPost('/signup',{userName:'shanlisi2',password:19940319
@@ -15,13 +15,8 @@ export default class Login extends Component{
             <div>
                 <MyHeader showBack={true} title="登录"/>
                 <div className='my-container'>
-                    登录
 
-
-
-
-
-                    <button onClick={this.handleClick}>点击</button>
+                    <button onClick={this.handleClick}>点击提交</button>
                 </div>
             </div>
         )

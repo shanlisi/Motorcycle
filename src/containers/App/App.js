@@ -9,6 +9,7 @@ import Tab from "../../components/Tab/Tab";
 import Details from "../Details/Details";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
+import Test from "../Test/Test";
 
 export default class App extends Component{
 
@@ -23,6 +24,7 @@ export default class App extends Component{
                     <Route path='/details' component={Details}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/signup' component={SignUp}/>
+                    <Route path='/test' component={Test}/>
                     <Tab/>
                </div>
             </Router>
