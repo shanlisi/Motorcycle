@@ -9,12 +9,8 @@ import Tab from "../../components/Tab/Tab";
 import Details from "../Details/Details";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
-<<<<<<< HEAD
 import Test from "../Test/Test";
-=======
 import Profile from "../Profile/Profile";
->>>>>>> libai
-
 export default class App extends Component{
 
     render(){
@@ -28,11 +24,8 @@ export default class App extends Component{
                     <Route path='/details/:id' component={Details}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/signup' component={SignUp}/>
-<<<<<<< HEAD
                     <Route path='/test' component={Test}/>
-=======
                    <Route path='/profile' component={Profile}/>
->>>>>>> libai
                     <Tab/>
                </div>
             </Router>

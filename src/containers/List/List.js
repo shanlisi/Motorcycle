@@ -85,7 +85,6 @@ export default class List extends Component {
     };
     search = () => {
         myGet('/productList/filterList?value=' + ipt.value).then(res => {
-            console.log(res);
             if (res.code == 1) {
                 this.setState({...this.state, productList: []});
             } else {
@@ -141,10 +140,10 @@ export default class List extends Component {
                         <div className='all-product'>
                             <ul className='main'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
-                                    <li key={index}>
+                                    <li key={index} className="mainList">
                                         {/* 增加查询参数 id  */}
-                                        <Link to={"/details/" + item.id }><img src={item.url}></img></Link>
-                                        <p className='product-name'>{item.name}</p>
+                                        <Link to={"/details/" + item.id }><img src={item.image}></img></Link>
+                                        <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
                                 )) : <li className='no-fond'>没有搜索到内容</li>
