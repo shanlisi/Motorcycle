@@ -11,7 +11,7 @@ var flag = {
     score: true,
     price:true,
 };
-// 这个是找numer类型的值  升序
+// 这个是找numer类型的值  升序 史萧萧
 function upSort(propertyName) {
     if ((typeof data[0][propertyName]) != "number") {
         return function(object1, object2) {
