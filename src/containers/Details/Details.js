@@ -18,11 +18,12 @@ class Details extends Component {
             selledAmount: 0,
             addTime: "",
             pictures: "",
-            desc: "",
+            desc: [],
             seller: "",
             typeModel: [],
             inventory: 0,
-            sellerAddress: ""
+            sellerAddress: "",
+            commentRate: 0
         }
     }   
     
@@ -41,7 +42,8 @@ class Details extends Component {
                     seller: response.data.seller,
                     typeModel: response.data.typeModel,
                     inventory: response.data.inventory,
-                    sellerAddress: response.data.sellerAddress
+                    sellerAddress: response.data.sellerAddress,
+                    commentRate: response.data.commentRate
                 })
             }
         })
@@ -64,16 +66,26 @@ class Details extends Component {
                     </div>
                     <div className="seller-area">
                         <div className="seller-info">
-                            <h4 className="seller-name"> { this.state.seller } <span className="">好评率：100%</span>  </h4>
-                            <p className="seller-address"> { this.state.sellerAddress } </p>
+                            <h4 className="seller-name"> { this.state.seller } <span className="">好评率：<i> { this.state.commentRate }% </i></span>  </h4>
+                            <p className="seller-address"> 所在地：{ this.state.sellerAddress } </p>
                         </div>
                         <div className="btn-group">
-                            <button className="contact">联系卖家</button>
-                            <button className="enter-shop">进入店铺</button>
+                            <button type="button"  className="contact">联系卖家</button>
+                            <button type="button" className="enter-shop">进入店铺</button>
                         </div>
                     </div>
                     <div className="pruduct-desc">
-                        { this.state.desc }
+                        <h4 className="desc-title">商品详情</h4>
+                        <div className="desc-content">
+                            { 
+                                this.state.desc.map( ( item, index ) => {
+                                    return (
+                                        <img key={ index } src={ item }/>
+                                    )
+                                })
+                            }
+                        </div>
+                        
                     </div>
                 </div>
             </div>
