@@ -55,9 +55,9 @@ app.get('/home/articleList', function (req, res) {
     if (offset + limit >= articleList.length) {
         hsaMore = false;
     }
-    let list = articleList.slice(offset, offset + limit);
 
-    res.json({code: 0, articleList: list, hasMore: hsaMore})
+    let list=articleList.slice(offset,offset+limit);
+    res.json({code:0,articleList:list,hasMore:hsaMore})
 });
 
 //商品列表
