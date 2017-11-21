@@ -15,11 +15,13 @@
 + 商品单价 productPrice [Number]
 + 商品已售数量 selledAmount [Number]
 + 商品上架时间 addTime  [Number]
-+ 商品图片 pictures [Array]
-+ 商品描述 desc [String]
++ 商品图片 pictures [Array] 
++ 商品描述 desc [Array]     [ url1, url2, url3 ]
 + 商品卖家 seller [String]
-+ 商品型号 typeModel [Array]  比如 [ { type: "颜色：红色（前倒置减震+平衡轴）", hasSelected: false } ] 
++ 商品型号 typeModel [Array]  比如 [ { type: "红色", hasSelected: false },  { type: "绿色", hasSelected: false }  ] 
 + 商品库存 inventory [Number]
++ 卖家地址 sellerAddress [String]
++ 卖家好评率 commentRate [Number] 50-100 之间的整数
 
 ### 用户购物车页
 需要访问权限验证 未登录用户没有购物车 购物车是一个数组
