@@ -3,7 +3,7 @@ import './SignUp.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {Link} from 'react-router-dom';
 import $ from 'jquery';
-import cookie from './cookie';
+import {myPost} from '../../api/index';
 export default class SignUp extends Component{
     constructor(){
         super();
@@ -51,7 +51,7 @@ export default class SignUp extends Component{
         }
     };
     phone=(e)=>{
-        let reg=/[^0-9]/g;
+        let reg=/^1[34578]\d{9}$/g;
         let str=e.target.value;
         if(str.length!==11){
             phone.className="iconfont icon-cuowu";
@@ -91,23 +91,39 @@ export default class SignUp extends Component{
             let user=this.state.name,
                 pass=this.state.pass,
                 tel=this.state.tel;
-            $.ajax({
-                url:'',
+            /*$.ajax({
+                url:'http://localhost:3000/signUp',
                 type:'post',
                 dataType:'json',
                 data:{
-                    user:user,
-                    pass:pass,
-                    tel:tel,
+                    userName:user,
+                    password:pass,
+                    phone:tel,
                 },
                 success:function (result) {
-
+                    if(result.code==0){
+                        window.location.href='http://localhost:8555/login#/';
+                    }else{
+                       alert(result.error+'请换一个再试！');
+                    }
+                    console.log(result);
                 }
-            });
-            window.location.href='http://localhost:8555/login#/';
+            });*/
+            myPost('/signUp',{
+                userName:user,
+                password:pass,
+                phone:tel
+            }).then(res=>{
+                if(res.code==0){
+                    window.location.href='http://localhost:8555/#/login';
+                }else{
+                    alert(res.error+'请换一个再试！');
+                    this.photo();
+                }
+                console.log(res);
+            })
         }else{
             alert('您输入的信息不正确，请重新输入！');
-            username='';
             this.photo();
         }
     };

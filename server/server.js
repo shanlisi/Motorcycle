@@ -108,7 +108,7 @@ app.get('/productDetail/:id',function (req, res) {
 app.route('/shoppingCart').get(function (req,res) {
 
 }).post(function (req,res) {
-
+    
 }).delete(function (req,res) {
 
 }).put(function (req, res) {

@@ -30,6 +30,7 @@
     "es6-promise": "^4.1.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "jquery": "^3.2.1",
     "mockjs": "^1.0.1-beta3",
     "jquery": "^3.2.1",
     "react": "^16.1.1",
