@@ -8,6 +8,7 @@ export default class Mine extends Component{
             <div>
                 <MyHeader showBack={true} title="个人中心"/>
                 <div className='my-container'>
+                    李睿测试
                     个人中心 <br/>
                     <Link to="/login">登录</Link> <br/>
                     <Link to="/signup">注册</Link>

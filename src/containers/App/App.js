@@ -16,13 +16,13 @@ export default class App extends Component{
         return (
             <Router>
                <div>
-                   <Route path='/' exact component={Home}/>
-                   <Route path='/list' component={List}/>
-                   <Route path='/shoppingCart' component={ShoppingCart}/>
-                   <Route path='/mine' component={Mine}/>
-                   <Route path='/details' component={Details}/>
-                   <Route path='/login' component={Login}/>
-                   <Route path='/signup' component={SignUp}/>
+                    <Route path='/' exact component={Home}/>
+                    <Route path='/list' component={List}/>
+                    <Route path='/shoppingCart' component={ShoppingCart}/>
+                    <Route path='/mine' component={Mine}/>
+                    <Route path='/details' component={Details}/>
+                    <Route path='/login' component={Login}/>
+                    <Route path='/signup' component={SignUp}/>
                     <Tab/>
                </div>
             </Router>
