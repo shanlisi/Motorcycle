@@ -7,12 +7,13 @@ export default class Mine extends Component {
     constructor() {
         super();
         this.state = {user: JSON.parse(cookie.get('USER'))};
-        console.log(this.state);
-        //user:{user: "123456", code: 0}
     }
 
     handleOut = () => {
         cookie.remove('USER')
+    };
+    handleTack=()=>{
+
     };
 
     render() {
@@ -35,7 +36,7 @@ export default class Mine extends Component {
                             <Link to='/login' className="mine-out"
                                   onClick={this.handleOut}>退出</Link>
 
-                            <Link to='/profile' className="mine-pro" onClick={this.handeleckick}>
+                            <Link to='/profile' className="mine-pro" onClick={this.handleTack}>
                                 <i className="iconfont icon-arrow_right_icon"></i>
                             </Link>
                         </div>
