@@ -1,12 +1,13 @@
 import React,{Component} from 'react';
-import './Login.less'
-import MyHeader from "../../components/MyHeader/MyHeader";
 import {Link} from 'react-router-dom';
 import $ from 'jquery';
 import cookie from './cookie';
+import './Login.less'
+import MyHeader from "../../components/MyHeader/MyHeader";
+import {myPost} from '../../api/index';
 export default class Login extends Component{
     logon=()=>{
-        $.ajax({
+        /*$.ajax({
             url:'',
             type:'post',
             data:{
@@ -16,12 +17,24 @@ export default class Login extends Component{
             success(result){
                 console.log(result);
             }
+        });*/
+        myPost('/login',{
+            userName:username.value,
+            password:password.value
+        }).then(res=>{
+            if(res.code==0){
+                window.location.href='http://localhost:8555/#/';
+            }else if(res.code==1){
+                alert(res.error);
+            }
+            console.log(res);
         });
         cookie.set("USER",JSON.stringify({
             user:username.value,
             code:0
         }));
         console.log(username.value, password.value);
+        console.log(cookie.get("USER"));
     };
     render(){
         return (
@@ -41,8 +54,6 @@ export default class Login extends Component{
                             <input type="text" placeholder="请输入密码" id="password"/>
                         </div>
                         <div className="button" onClick={this.logon}>登录</div>
-
-
                         <div className="signup">
                             <span className="text">还没有牛摩网账号？</span>
                             <Link to="/signup" className="free">免费注册</Link>
