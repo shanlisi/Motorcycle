@@ -85,7 +85,6 @@ export default class List extends Component {
     };
     search = () => {
         myGet('/productList/filterList?value=' + ipt.value).then(res => {
-            console.log(res);
             if (res.code == 1) {
                 this.setState({...this.state, productList: []});
             } else {
@@ -142,7 +141,8 @@ export default class List extends Component {
                             <ul className='main'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index} className='mainList'>
-                                        <Link to="/details"><img src={item.image}></img></Link>
+                                        <Link to={"/details/" + item.id}><img src={item.image}></img></Link>
+
                                         <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
