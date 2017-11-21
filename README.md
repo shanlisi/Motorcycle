@@ -10,15 +10,18 @@
 根据路由跳转路径的中的路由参数来确定当前要展示的商品 比如 /detail/:productId 
 在组件挂载之后向服务端发送请求 并将商品 ID 发送至服务端 获取商品数据 并将商品数据保存至组件的状态中
 #### 商品的字段
++ 商品 id id [Number]
 + 商品名称 productName [String]
 + 商品单价 productPrice [Number]
 + 商品已售数量 selledAmount [Number]
 + 商品上架时间 addTime  [Number]
-+ 商品图片 pictures [Array]
-+ 商品描述 desc [String]
++ 商品图片 pictures [Array] 
++ 商品描述 desc [Array]     [ url1, url2, url3 ]
 + 商品卖家 seller [String]
-+ 商品型号 typeModel [Array]  比如 [ { type: "颜色：红色（前倒置减震+平衡轴）", hasSelected: false } ] 
++ 商品型号 typeModel [Array]  比如 [ { type: "红色", hasSelected: false },  { type: "绿色", hasSelected: false }  ] 
 + 商品库存 inventory [Number]
++ 卖家地址 sellerAddress [String]
++ 卖家好评率 commentRate [Number] 50-100 之间的整数
 
 ### 用户购物车页
 需要访问权限验证 未登录用户没有购物车 购物车是一个数组
@@ -28,3 +31,7 @@
 + 商品型号 type [String]
 + 购买数量 quantity [Number] default 1
 + 小计 subtotal [Number] quantity * productPrice
+
+测试用例
+
+王梦雅测试用例
