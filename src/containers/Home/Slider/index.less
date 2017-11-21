@@ -1,0 +1,38 @@
+.carousel-wrapper{
+  position: relative;
+  height: 300px;
+  width: 100%;
+  .carousel{
+    width:inherit;
+    height: inherit;
+    div{
+      width: inherit;
+      height: inherit;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .dots{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span{
+      z-index: 99;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: red;
+      display: inline-block;
+      margin-left: 5px;
+      &.active{
+        background-color: orangered;
+      }
+    }
+  }
+}
