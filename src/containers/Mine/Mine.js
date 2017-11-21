@@ -6,7 +6,8 @@ import cookie from  '../App/cookie'
 export default class Mine extends Component {
     constructor() {
         super();
-        this.state = {user: JSON.parse(cookie.get('USER'))};
+        //this.state = {user: JSON.parse(cookie.get('USER'))};
+        this.state = {user: []};
     }
 
     handleOut = () => {
