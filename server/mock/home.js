@@ -84,7 +84,7 @@ let articleList=[
     ];
 
 for (let i = 0; i < 50; i++) {
-    let num =Math.round(Math.random()*articleList.length);
+    let num =Math.round(Math.random()*(articleList.length-1));
     articleList.push(articleList[num])
 }
 module.exports ={swipers,articleList};

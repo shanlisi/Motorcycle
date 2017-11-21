@@ -46,7 +46,7 @@ export function myPost(url,data) {
 }
 export function myPut(url,data) {
     return fetch(HOST+url,{
-        method:'POST',
+        method:'PUT',
         credentials:"include",
         headers:{
             "Accept":"application/json",
