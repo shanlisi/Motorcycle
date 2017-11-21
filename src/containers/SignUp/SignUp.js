@@ -107,6 +107,7 @@ export default class SignUp extends Component{
             window.location.href='http://localhost:8555/login#/';
         }else{
             alert('您输入的信息不正确，请重新输入！');
+            username='';
             this.photo();
         }
     };
