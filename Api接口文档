@@ -228,44 +228,15 @@
 ```
 ### 10.获取用户信息
 ```
-地址:/users/userId
+地址:/user/userId
     userId:用户ID ，数字
 类型:GET
 
 返回结果：用户信息
 {
     code:0/1, //0:成功 1:失败[Number]
-    {
-        userId:'用户id',[Number]
-        userName:'用户名',[String]
-        phone:'手机号',[Number]
-        sex:'性别',[String]
-        mail:'邮箱',[String]
-        desc:'简介',[String]
-        address:'地址',[String]
-        orderForms:'订单',[String]
-    },...]
-}
-```
-
-### 11.修改用户信息
-```
-地址:/users
-类型:PUT
-请求体参数:{
-      userId:'用户id',[Number]【必填】
-      userName:'用户名',[String]【从这以下选填】
-      phone:'手机号',[Number]
-      sex:'性别',[String]
-      mail:'邮箱',[String]
-      desc:'简介',[String]
-      address:'地址',[String]
-      orderForms:'订单',[String]
-}
-返回结果：新的用户信息
-{
-    code:0/1, //0:成功 1:失败[Number]
-    {
+    login:true/false'是否登录'[Boolean]
+    userInfo{
         userId:'用户id',[Number]
         userName:'用户名',[String]
         phone:'手机号',[Number]
@@ -277,6 +248,42 @@
     }
 }
 ```
+
+### 11.修改用户信息
+```
+地址:/user
+类型:PUT
+请求体参数:{
+      userId:'用户id',[Number]【必填】
+      userName:'用户名',[String]【从这以下选填】
+      phone:'手机号',[Number]
+      sex:'性别',[String]
+      mail:'邮箱',[String]
+      desc:'简介',[String]
+      address:'地址',[Array]
+      orderForms:'订单',[Array]
+}
+返回结果：新的用户信息
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'是否登录'false,[Boolean]
+    {
+        userId:'用户id',[Number]
+        userName:'用户名',[String]
+        phone:'手机号',[Number]
+        sex:'性别',[String]
+        mail:'邮箱',[String]
+        desc:'简介',[String]
+        address:'地址',[Array]
+        orderForms:'订单',[Array]
+    }
+}
+```
+### 11(新增)
+地址:/logout
+类型:GET
+发送该请求退出登录态
+
 ### 12.注册
 ```
 地址:/signUp
@@ -305,6 +312,12 @@
 {
     code:0/1, //0:成功 1:失败[Number]
     success:'登录成功',[String]
+    userId:'用户id',[Number]
     error:'登录失败，用户名或密码错误'[String]
 }
+```
+
+
+```$xslt
+[{"id":1,"userName":"shanlisi","password":"19940319","phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":2,"userName":"shanlisi1","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":3,"userName":"shanlisi2","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":4,"userName":"123","password":"123456","phone":"12345678901","sex":"man","mail":"","desc":"","address":[],"orderForms":[]}]
 ```
