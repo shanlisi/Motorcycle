@@ -1,1 +1,0 @@
-console.log([{name:1},{name:2}].find(item=>item.name==1));

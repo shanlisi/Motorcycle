@@ -1,5 +1,6 @@
 let express =require('express');
 let app=express();
+let fs=require('fs');
 let bodyParser =require('body-parser');
 let cookieParser=require('cookie-parser');
 //服务端口号
@@ -113,6 +114,23 @@ app.route('/shoppingCart').get(function (req,res) {
 }).put(function (req, res) {
 
 });
+
+//读取用户信息文件
+function getUsersInfo(cb) {
+    fs.readFile('./mock/usersInfo.json','utf8',function (err, data) {
+        if(err){
+            cb([])
+        }else{
+            cb(JSON.parse(data))
+        }
+    })
+}
+//修改用户信息文件
+function modifyUserInfo(data, cb) {
+    fs.writeFile('./mock/usersInfo.json',JSON.stringify(data),cb)
+}
+
+
 //获取用户信息
 app.get('/user/:id',function (req, res) {
     let id=req.params.id;
@@ -124,11 +142,40 @@ app.put('/users',function (req,res) {
 
 //注册
 app.post('/signup',function (req, res) {
-
+    let {userName,password, phone=''}=req.body;
+    if(!userName||!password){
+        res.json({code:1,error:'userName和password必须上传'})
+        return;
+    }
+    getUsersInfo(function (userInfo) {
+        let flag=userInfo.some(item=>(item.userName==userName
+        ));
+        if(flag){
+            res.json({code:1,error:'改用户已经被注册了'})
+        }else{
+            let obj={id:userInfo.length+1,userName,password, phone};
+            userInfo.push(obj);
+            modifyUserInfo(userInfo,function () {
+                res.json({code:0,success:'注册成功'})
+            })
+        }
+    })
 });
-
+//登录
 app.post('/login',function (req, res) {
-
+    let {userName,password}=req.body;
+    if(!userName||!password){
+        res.json({code:1,error:'请按API文档规定请求'})
+    }
+    getUsersInfo(function (data) {
+        let flag=data.some(item=>(item.userName==userName&&item.password==password
+        ));
+        if(flag){
+            res.json({code:0,success:'登录成功'})
+        }else{
+            res.json({code:1,error:'登录失败，用户名或密码错误'})
+        }
+    })
 });
 
 app.listen(port,function () {
