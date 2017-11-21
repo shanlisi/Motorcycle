@@ -3,63 +3,15 @@ import {Link} from 'react-router-dom'
 import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
-
+import {myGet} from '../../api/index'
 export default class List extends Component {
     constructor() {
         super();
         this.state = {
             isShow: false,
-            data: [
-                {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 1,
-                    date: 1,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                },
-                {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 2,
-                    date: 2,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-                {
-                    name: "铃木GD110",
-                    price: 2100,
-                    id: 3,
-                    date: 3,
-                    sell: 25999,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/13188/2017092118190467499_S.jpg'
-                },
-                {
-                    name: "GW250S(摩旅)",
-                    price: 2200,
-                    id: 4,
-                    date: 4,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-08/13188/2017082417075766135_S.jpg'
-                }, {
-                    name: "豪爵铃木",
-                    price: 2300,
-                    id: 5,
-                    date: 5,
-                    sell: 25667,
-                    url: 'http://img3.newmotor.com.cn/UploadFiles/2017-09/66415/2017090111024575997.jpg'
-                }, {
-                    name: "EN125-3F",
-                    price: 2400,
-                    id: 6,
-                    date: 6,
-                    sell: 25667,
-                    url: 'http://img2.newmotor.com.cn/UploadFiles/2017-05/234/2017052410385294726_S.jpg'
-                },
-            ]
+            productList: []
         }
     }
-
     /**
      * 升序排列
      * @param propertyName
@@ -79,8 +31,7 @@ export default class List extends Component {
                 return value2 - value1;
             }
         }
-    }
-
+    };
     /**
      * 降序排列
      * @param propertyName
@@ -101,7 +52,7 @@ export default class List extends Component {
                 return value1 - value2;
             }
         }
-    }
+    };
     handleClick = () => {
         this.setState({isShow: !this.state.isShow})
     };
@@ -120,22 +71,28 @@ export default class List extends Component {
 
         this.setState({data: this.state.data});
     };
-
     /**
      * 搜索
      */
     search = (prop) => {
         prop = "2300";
         let newArry = this.state.data.filter(function (item) {
-                let price = item.price.toString();
-                return item.name.indexOf(prop) == "-1" ? (
-                    price.indexOf(prop) == "-1" ? false : true
-                ) : true;
-            }
-        )
+            let price = item.price.toString();
+            return item.name.indexOf(prop) == "-1" ? (
+                price.indexOf(prop) == "-1" ? false : true
+            ) : true;
+        })
         this.setState({data: newArry});
     };
-
+    componentDidMount(){
+        var offset=0;
+        var  limit=8;
+        myGet('/productList/getList?offset='+offset+'&limit='+limit).then(res=>{
+            console.log(res,typeof res);
+            this.setState({...this.state,productList:res.productList});
+            console.log(this.state.productList);}
+        )
+    };
     render() {
         //升序
         return (
@@ -178,14 +135,13 @@ export default class List extends Component {
                         </div>
                         <div className='all-product'>
                             <ul className='main'>
-                                {this.state.data.map((item, index) => (
+                                {this.state.productList.map((item, index) => (
                                     <li key={index}>
-                                        <Link to="/details"><img src={item.url}></img></Link>
+                                        <Link to="/details"><img src={item.image}></img></Link>
                                         <p className='product-name'>{item.name}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
-                                ))
-                                }
+                                ))}
 
                             </ul>
                         </div>
