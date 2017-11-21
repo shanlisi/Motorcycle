@@ -48,7 +48,6 @@ app.get('/home/articleList',function (req, res) {
         hsaMore=false;
     }
     let list=articleList.slice(offset,offset+limit);
-
     res.json({code:0,articleList:list,hasMore:hsaMore})
 });
 

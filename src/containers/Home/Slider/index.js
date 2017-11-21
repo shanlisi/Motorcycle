@@ -30,7 +30,6 @@ export default class Slider extends Component{
                 this.setState({index})
             }
         };
-        console.log(this.state.swipers);
         return(
             <div className="carousel-wrapper">
                 {
