@@ -4,13 +4,13 @@ import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {myGet} from '../../api/index'
+
 export default class List extends Component {
     constructor() {
         super();
         this.state = {
             isShow: false,
-            productList: [],
-            val:''
+            productList: [], id: ''
         }
     }
     /**
@@ -23,7 +23,7 @@ export default class List extends Component {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
-                console.log(value1,value2);
+                console.log(value1, value2);
                 return value1.localeCompare(value2);
             }
         } else {
@@ -58,7 +58,6 @@ export default class List extends Component {
     handleClick = () => {
         this.setState({isShow: !this.state.isShow})
     };
-
     /**
      * 排序
      * @param prop 排序的属性
@@ -73,32 +72,28 @@ export default class List extends Component {
 
         this.setState({productList: this.state.productList});
     };
-    /**
-     * 搜索
-     */
-    search = (prop) => {
-        prop = "2300";
-        let newArry = this.state.productList.filter(function (item) {
-                let price = item.price.toString();
-                return item.name.indexOf(prop) == "-1" ? (
-                    price.indexOf(prop) == "-1" ? false : true
-                ) : true;
-            })
-        this.setState({productList: newArry});
+    change = () => {
+        var offset = 0;
+        var limit = 8;
+        myGet('/productList/getList?offset=' + offset + '&limit=' + limit).then(res => {
+                this.setState({...this.state, productList: res.productList});
+            }
+        );
+    }
+    componentDidMount() {
+        this.change();
     };
-     componentDidMount(){
-         var offset=0;
-         var  limit=8;
-         myGet('/productList/getList?offset='+offset+'&limit='+limit).then(res=>{
-           this.setState({...this.state,productList:res.productList});
-         }
-            )
-        };
-     //获取input里面的值
-    handleChange=(event)=>{
-        let  number=event.target.value;
-        this.setState({...this.state,val:number})
+    search = () => {
+        myGet('/productList/filterList?value=' + ipt.value).then(res => {
+            console.log(res);
+            if (res.code == 1) {
+                this.setState({...this.state, productList: []});
+            } else {
+                this.setState({...this.state, productList: res.productList});
+            }
+        })
     };
+
     render() {
         //升序
         return (
@@ -107,13 +102,17 @@ export default class List extends Component {
                 <div className='my-container'>
                     <div className='list'>
                         <div className='title'>
-                            <input type="text" placeholder='搜索商品' onChange={this.handleChange}  value={this.state.val}/>
-                            <span className='search-span' onClick={() => {
-                                this.search()
-                            }}></span>
+                            <input type="text" placeholder='搜索商品' id='ipt' onChange={
+                                () => {
+                                    ipt.value.length == 0;
+                                    this.change();
+                                }
+                            }/>
+                            <span className='search-span iconfont icon-search'
+                                  onClick={this.search}></span>
                             <div className='sort' onClick={this.handleClick}>
                                 {this.state.isShow
-                                    ? <span className='close'>x</span> : <span className='classify'>销量排序</span>}
+                                    ? <span className='close'>&times;</span> : <span className='classify'>销量排序</span>}
                             </div>
                             <TransitionGroup>
                                 {this.state.isShow ?
@@ -141,13 +140,14 @@ export default class List extends Component {
                         </div>
                         <div className='all-product'>
                             <ul className='main'>
-                                {this.state.productList.map((item, index) => (
+                                {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index}>
                                         <Link to="/details"><img src={item.image}></img></Link>
                                         <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
-                                ))}
+                                )) : <li>没有搜索到内容</li>
+                                }
 
                             </ul>
                         </div>
