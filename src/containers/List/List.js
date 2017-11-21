@@ -141,24 +141,14 @@ export default class List extends Component {
                         <div className='all-product'>
                             <ul className='main'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
-<<<<<<< HEAD
                                     <li key={index}>
-
-
                                         {/* 增加查询参数 id  */}
                                         <Link to={"/details/" + item.id }><img src={item.url}></img></Link>
                                         <p className='product-name'>{item.name}</p>
-
-=======
-                                    <li key={index} className='mainList'>
-                                        <Link to="/details"><img src={item.image}></img></Link>
-                                        <p className='product-name'>{item.title}</p>
->>>>>>> shixiaoxiao
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
                                 )) : <li className='no-fond'>没有搜索到内容</li>
                                 }
-
                             </ul>
                         </div>
 
