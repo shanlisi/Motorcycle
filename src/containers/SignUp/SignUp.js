@@ -50,14 +50,14 @@ export default class SignUp extends Component{
         }
     };
     phone=(e)=>{
-        let reg=/^1[34578]\d{9}$/g;
+        let reg=/^1(3|4|5|7|8)\d{9}$/g;
         let str=e.target.value;
         if(str.length!==11){
             phone.className="iconfont icon-cuowu";
             phone.style.color="red";
             console.log('err');
             this.setState({phone:false});
-        }else if(str.match(reg)){
+        }else if(!reg.test(str)){
             phone.className="iconfont icon-cuowu";
             phone.style.color="red";
             console.log('err2');

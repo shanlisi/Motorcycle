@@ -22,7 +22,6 @@ export default class Slider extends Component{
         })
     }
     render(){
-
         let swipeOptions={
             continuous:true,
             auto:1000,
