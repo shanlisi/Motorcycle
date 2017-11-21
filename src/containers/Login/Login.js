@@ -1,52 +1,27 @@
+import React,{Component} from 'react';
+import './Login.less'
+import MyHeader from "../../components/MyHeader/MyHeader";
+import {myPost} from '../../api/index'
 
-import {Link} from 'react-router-dom';
-import $ from 'jquery';
-import cookie from './cookie';
 export default class Login extends Component{
-    logon=()=>{
-        $.ajax({
-            url:'',
-            type:'post',
-            data:{
-                user:username.value,
-                pass:password.value
-            },
-            success(result){
-                console.log(result);
-            }
-        });
-        cookie.set("USER",JSON.stringify({
-            user:username.value,
-            code:0
-        }));
-        console.log(username.value, password.value);
+
+    handleClick=()=>{
+        myPost('/login',{userName:'shanlisi2',password:19940319
+    }).then(res=>{
+            console.log(res,typeof res);})
     };
     render(){
         return (
             <div>
                 <MyHeader showBack={true} title="登录"/>
-                <div className='my-container login'>
-                    <div className="content">
-                        <div className="pic">
-                            <img src="http://img.hb.aicdn.com/17ad02a021551ba923a7c06f683a14fd22f5280d3ce5e-3VCFHH_fw658" alt=""/>
-                        </div>
-                        <div className="input">
-                            <span>用户名/手机号</span>
-                            <input type="text" placeholder="请输入用户名/手机号" id="username"/>
-                        </div>
-                        <div className="input">
-                            <span>密码</span>
-                            <input type="text" placeholder="请输入密码" id="password"/>
-                        </div>
-                        <div className="button" onClick={this.logon}>登录</div>
+                <div className='my-container'>
+                    登录
 
 
-                        <div className="signup">
-                            <span className="text">还没有牛摩网账号？</span>
-                            <Link to="/signup" className="free">免费注册</Link>
-                            <a className="forget">忘记密码</a>
-                        </div>
-                    </div>
+
+
+
+                    <button onClick={this.handleClick}>点击</button>
                 </div>
             </div>
         )
