@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [{"id":1,"userName":"shanlisi","password":"19940319","phone":""},{"id":2,"userName":"shanlisi1","password":19940319,"phone":""},{"id":3,"userName":"shanlisi2","password":19940319,"phone":""},{"id":4,"userName":"111","password":"111111","phone":"98401206936"}]
+=======
+[{"id":1,"userName":"shanlisi","password":"19940319","phone":""},{"id":2,"userName":"shanlisi1","password":19940319,"phone":""},{"id":3,"userName":"shanlisi2","password":19940319,"phone":""},{"id":4,"userName":"123","password":"123456","phone":"12345678901"}]
+>>>>>>> 548ba915f0f5df447dfd422bc801748acd357739
