@@ -21,7 +21,7 @@ export default class App extends Component{
                     <Route path='/list' component={List}/>
                     <Route path='/shoppingCart' component={ShoppingCart}/>
                     <Route path='/mine' component={Mine}/>
-                    <Route path='/details' component={Details}/>
+                    <Route path='/details/:id' component={Details}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/signup' component={SignUp}/>
                     <Route path='/test' component={Test}/>

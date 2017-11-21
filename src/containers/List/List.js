@@ -180,7 +180,9 @@ export default class List extends Component {
                             <ul className='main'>
                                 {this.state.data.map((item, index) => (
                                     <li key={index}>
-                                        <Link to="/details"><img src={item.url}></img></Link>
+
+                                        {/* 增加查询参数 id  */}
+                                        <Link to={"/details/" + item.id }><img src={item.url}></img></Link>
                                         <p className='product-name'>{item.name}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
