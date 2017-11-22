@@ -103,7 +103,7 @@ app.get('/productDetail/:id', function (req, res) {
     if ((products[id - 1]) && (products[id - 1].id = id)) {
         res.json({code: 0, product: products[id - 1]})
     } else {
-        let product = products.find(item => item.id == id);
+        let product = products.find(item => item.userId == id);
         if (product) {
             res.json({code: 0, product: product})
         } else {
@@ -141,7 +141,7 @@ app.get('/shoppingCart/:id', function (req, res) {
         return;
     }
     getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
+        let userInfo = data.find(item => item.userId == userId);
         if (!userInfo) {
             res.json({code: 1, login: true, error: '未找到该用户信息，请检查参数ID是否传递正确'})
         } else {
@@ -165,7 +165,7 @@ app.route('/shoppingCart').post(function (req, res) {
             return;
         }
         getUsersInfo(function (data) {
-            let userInfo = data.find(item => item.id == userId);
+            let userInfo = data.find(item => item.userId == userId);
             if (!userInfo) {
                 res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'});
                 return
@@ -196,7 +196,7 @@ app.route('/shoppingCart').post(function (req, res) {
             return;
         }
         getUsersInfo(function (data) {
-            let userInfo = data.find(item => item.id == userId);
+            let userInfo = data.find(item => item.userId == userId);
             if (!userInfo) {
                 res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
             } else {
@@ -229,7 +229,7 @@ app.route('/shoppingCart').post(function (req, res) {
         return;
     }
     getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
+        let userInfo = data.find(item => item.userId == userId);
         if (!userInfo) {
             res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'});
             return
@@ -255,7 +255,7 @@ app.get('/user/:id', function (req, res) {
     }
     let userId = req.params.id;
     getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
+        let userInfo = data.find(item => item.userId == userId);
         if (userInfo) {
             res.json({code: 0, login: true, userInfo})
         } else {
@@ -277,20 +277,25 @@ app.put('/user', function (req, res) {
     }
 
     getUsersInfo(function (data) {
-        if (!data.some(item => item.id == reqBody.userId)) {
+        if (!data.some(item => item.userId == reqBody.userId)) {
             res.json({code: 1, error: '用户ID不存在'});
             return;
         }
+        let isChange=false;
         data.forEach((item, index) => {
-            if (item.id == reqBody.id) {
+            if (item.userId == reqBody.userId) {
                 let userInfo = data.splice(index, 1)[0];
                 userInfo = {...userInfo, ...reqBody};
                 data.splice(index, 0, userInfo);
                 modifyUserInfo(data, function () {
                     res.json({code: 0, login: true, userInfo})
-                })
+                });
+                isChange=true;
             }
         });
+        if(!isChange){
+            res.json({code:1,login:true,error:'未找到对应的用户'})
+        }
     });
 });
 
@@ -313,7 +318,7 @@ app.post('/signup', function (req, res) {
             res.json({code: 1, error: '该用户已经被注册了'})
         } else {
             let obj = {
-                id: userInfo.length + 1,
+                userId: userInfo.length + 1,
                 userName,
                 password,
                 phone,
@@ -342,7 +347,7 @@ app.post('/login', function (req, res) {
         ));
         if (userInfo) {
             req.session.login = true;
-            res.json({code: 0, success: '登录成功', userId: userInfo.id})
+            res.json({code: 0, success: '登录成功', userId: userInfo.userId})
         } else {
             res.json({code: 1, error: '登录失败，用户名或密码错误'})
         }
