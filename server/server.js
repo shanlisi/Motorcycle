@@ -30,12 +30,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({extended: false}));
 app.use('/public', express.static('static'));
 app.use(session({
-    resave:true,
-    saveUninitialized:true,
-    secret:'shanlisi',
-    cookie:{
-        httpOnly:false,
-        maxAge:1800000
+    resave: true,
+    saveUninitialized: true,
+    secret: 'shanlisi',
+    cookie: {
+        httpOnly: false,
+        maxAge: 1800000
     }
 }));
 
@@ -56,8 +56,8 @@ app.get('/home/articleList', function (req, res) {
         hsaMore = false;
     }
 
-    let list=articleList.slice(offset,offset+limit);
-    res.json({code:0,articleList:list,hasMore:hsaMore})
+    let list = articleList.slice(offset, offset + limit);
+    res.json({code: 0, articleList: list, hasMore: hsaMore})
 });
 
 //商品列表
@@ -97,7 +97,7 @@ app.get('/productList/filterList', function (req, res) {
 app.get('/productDetail/:id', function (req, res) {
     let id = req.params.id;
     if (isNaN(Number(id))) {
-        res.json({code: 1, error: '参数ID必须是数字，例.../productDetail/1'});
+        res.json({code: 1, error: '参数ID必须上传且是数字，例.../productDetail/1'});
         return;
     }
     if ((products[id - 1]) && (products[id - 1].id = id)) {
@@ -112,60 +112,161 @@ app.get('/productDetail/:id', function (req, res) {
     }
 });
 
-//购物车查增删改
-app.route('/shoppingCart').get(function (req, res) {
-
-}).post(function (req, res) {
-
-}).delete(function (req, res) {
-
-}).put(function (req, res) {
-
-});
-
-//读取用户信息文件
+//读取用户JSON文件
 function getUsersInfo(cb) {
     fs.readFile('./mock/usersInfo.json', 'utf8', function (err, data) {
         if (err) {
             cb([])
         } else {
+            console.log('json数据',data);
             cb(JSON.parse(data))
         }
     })
 }
 
-//修改用户信息文件
+//修改用户JSON文件
 function modifyUserInfo(data, cb) {
     fs.writeFile('./mock/usersInfo.json', JSON.stringify(data), cb)
 }
 
 
+//获取购物车信息
+app.get('/shoppingCart/:id', function (req, res) {
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
+        return
+    }
+    let userId = req.params.id;
+    console.log(userId);
+    if (isNaN(Number(userId))) {
+        res.json({code: 1, login: true, error: '参数ID必须上传且是数字，例.../shoppingCart/1'});
+        return;
+    }
+    getUsersInfo(function (data) {
+        let userInfo = data.find(item => item.id == userId);
+        if (!userInfo) {
+            res.json({code: 1, login: true, error: '未找到该用户信息，请检查参数ID是否传递正确'})
+        } else {
+            res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+        }
+    })
+});
+//加入购物车、删除购物车中商品、修改购物车
+app.route('/shoppingCart').post(function (req, res) {
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
+        return
+    }
+    let {userId, cartInfo} = req.body;
+    if (isNaN(Number(userId))) {
+        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+        return;
+    }
+    getUsersInfo(function (data) {
+        let userInfo = data.find(item => item.id == userId);
+        if (!userInfo) {
+            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
+        } else {
+            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
+                let item = userInfo.cartInfo[i];
+                if (item.productId == cartInfo.productId) {
+                    if (item.typeModel == cartInfo.typeModel) {
+                        item.num += cartInfo.num;
+                    } else {
+                        userInfo.cartInfo.push(cartInfo);
+                    }
+                    modifyUserInfo(userInfo, function () {
+                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+                    });
+                    break;
+                }
+            }
+        }
+    })
+
+}).delete(function (req, res) {
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
+        return
+    }
+    let {userId, cartInfo} = req.body;
+    if (isNaN(Number(userId))) {
+        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+        return;
+    }
+    getUsersInfo(function (data) {
+        let userInfo = data.find(item => item.id == userId);
+        if (!userInfo) {
+            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
+        } else {
+            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
+                let item = userInfo.cartInfo[i];
+                if (item.productId == cartInfo.productId&&item.typeModel == cartInfo.typeModel) {
+                    userInfo.cartInfo.splice(i,1);
+                    modifyUserInfo(userInfo, function () {
+                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+                    });
+                    break;
+                }
+            }
+        }
+    })
+}).put(function (req, res) {
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
+        return
+    }
+    let {userId, cartInfo} = req.body;
+    if (isNaN(Number(userId))) {
+        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+        return;
+    }
+    getUsersInfo(function (data) {
+        let userInfo = data.find(item => item.id == userId);
+        if (!userInfo) {
+            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
+        } else {
+            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
+                let item = userInfo.cartInfo[i];
+                if (item.productId == cartInfo.productId&&item.typeModel == cartInfo.typeModel) {
+                    item.num+=cartInfo.num;
+                    modifyUserInfo(userInfo, function () {
+                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+                    });
+                    break;
+                }
+            }
+        }
+    })
+});
+
+
 //获取用户信息
 app.get('/user/:id', function (req, res) {
-    if(!req.session.login){
-        res.json({code:0,login:false,error:'用户未登录'});
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
         return
     }
     let userId = req.params.id;
     getUsersInfo(function (data) {
-        let userInfo=data.find(item=>item.id==userId);
-        if(userInfo){
-            res.json({code:0,login:true,userInfo})
-        }else{
-            res.json({code:1,login:true,error:'未找到该用户信息，请检查用户id是否正确'})
+        let userInfo = data.find(item => item.id == userId);
+        if (userInfo) {
+            res.json({code: 0, login: true, userInfo})
+        } else {
+            res.json({code: 1, login: true, error: '未找到该用户信息，请检查用户id是否正确'})
         }
     })
 
 });
 //修改用户信息
 app.put('/user', function (req, res) {
-    if(!req.session.login){
-        res.json({code:0,login:false,error:'用户未登录'});
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
         return
     }
     let reqBody = req.body;
-    if(!reqBody.userId){
-        res.json({code:1,login:true,error:'请在请求体内传递userId参数'});
+    if (!reqBody.userId) {
+        res.json({code: 1, login: true, error: '请在请求体内传递userId参数'});
         return;
     }
 
@@ -174,22 +275,24 @@ app.put('/user', function (req, res) {
             res.json({code: 1, error: '用户ID不存在'});
             return;
         }
-        data.forEach((item,index) => {
+        data.forEach((item, index) => {
             if (item.id == reqBody.id) {
-                let userInfo=data.splice(index,1)[0];
-                userInfo={...userInfo,...reqBody};
-                data.splice(index,0,userInfo);
-                modifyUserInfo(data,function () {
-                    res.json({code:0,login:true,userInfo})
+                let userInfo = data.splice(index, 1)[0];
+                userInfo = {...userInfo, ...reqBody};
+                data.splice(index, 0, userInfo);
+                modifyUserInfo(data, function () {
+                    res.json({code: 0, login: true, userInfo})
                 })
             }
         });
     });
 });
-app.get('/logout',function (req, res) {
-    req.session.login=null;
-    res.json({code:0,success:'已退出'})
-})
+
+//退出登录
+app.get('/logout', function (req, res) {
+    req.session.login = null;
+    res.json({code: 0, success: '已退出'})
+});
 //注册
 app.post('/signup', function (req, res) {
     let {userName, password, phone = ''} = req.body;
@@ -212,7 +315,8 @@ app.post('/signup', function (req, res) {
                 mail: '',
                 desc: '',
                 address: [],
-                orderForms: []
+                orderForms: [],
+                cartInfo: []
             };
             userInfo.push(obj);
             modifyUserInfo(userInfo, function () {
@@ -223,16 +327,18 @@ app.post('/signup', function (req, res) {
 });
 //登录，设置一个session：login(true/false)
 app.post('/login', function (req, res) {
+    console.log('--------登录进------------');
     let {userName, password} = req.body;
     if (!userName || !password) {
         res.json({code: 1, error: '请按API文档规定请求'})
     }
     getUsersInfo(function (data) {
+        console.log('------读取用户信息json文件-------');
         let userInfo = data.find(item => (item.userName == userName && item.password == password
         ));
         if (userInfo) {
-            req.session.login=true;
-            res.json({code: 0, success: '登录成功',userId:userInfo.id})
+            req.session.login = true;
+            res.json({code: 0, success: '登录成功', userId: userInfo.id})
         } else {
             res.json({code: 1, error: '登录失败，用户名或密码错误'})
         }
