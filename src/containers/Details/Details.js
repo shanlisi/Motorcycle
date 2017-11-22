@@ -93,11 +93,18 @@ class Details extends Component {
 
             console.log( response );
 
-            if ( response.code === 0 ) {
+            // 商品添加成功 并且用户已经登录
+            if ( response.code === 0 && response.login ) {
                 this.setState( { addedSuccess: !this.state.addedSuccess, isSelectPanelShow: !this.state.isSelectPanelShow } )
-            } else {
-                this.setState( { addedFailed: !this.state.addedFailed, isSelectPanelShow: !this.state.isSelectPanelShow } )
+            } 
+
+            // 用户未登录
+            else if ( response.code === 0 && !response.login ) {
+                this.setState( { isAuth: false } );
             }
+            else {
+                this.setState( { addedFailed: !this.state.addedFailed, isSelectPanelShow: !this.state.isSelectPanelShow } )
+            } 
         })
     }
 
