@@ -3,23 +3,24 @@ import {Link} from 'react-router-dom'
 import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
-import {myGet} from '../../api/index'
-
+import {myGet} from '../../api/index';
+import getScroll from '../../utils1'
 export default class List extends Component {
     constructor() {
         super();
         this.state = {
             isShow: false,
-            productList: [], id: ''
+            productList: [], id: '',is:true
         }
     }
+
     /**
      * 升序排列
      * @param propertyName
      * @returns {Function}
      */
     upSort = (propertyName) => {
-        if ((typeof  this.state.productList[0][propertyName]) != "number") {
+        if ((typeof this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
@@ -40,6 +41,7 @@ export default class List extends Component {
      * @returns {Function}
      */
     downSort = (propertyName) => {
+
         if ((typeof this.state.productList[0][propertyName]) != "number") {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
@@ -64,25 +66,43 @@ export default class List extends Component {
      * @param isUpSort 是否升序排列
      */
     sort = (prop, isUpSort) => {
+        if (this.state.productList.length == 0) {
+            return
+        }
         if (isUpSort) {
             this.state.productList.sort(this.upSort(prop));
         } else {
             this.state.productList.sort(this.downSort(prop));
         }
-
         this.setState({productList: this.state.productList});
     };
     change = () => {
         var offset = 0;
-        var limit = 8;
-        myGet('/productList/getList?offset=' + offset + '&limit=' + limit).then(res => {
-                this.setState({...this.state, productList: res.productList});
-            }
-        );
-    }
-    componentDidMount() {
-        this.change();
+        var limit = 6;
+        return () => {
+            offset += limit;
+            myGet('/productList/getList?offset=' + offset + '&limit=' + limit).then(res => {
+                console.log(res);
+                if(res.code==1){
+                    getScroll(this.div,this.change(),false)
+                    return;
+                }
+
+                this.setState({...this.state, productList: [...this.state.productList,...res.productList]});
+                }
+            );
+
+        }
+
     };
+
+
+    componentDidMount() {
+
+        this.change()();
+        getScroll(this.div, this.change(),this.state.is);
+    };
+
     search = () => {
         myGet('/productList/filterList?value=' + ipt.value).then(res => {
             if (res.code == 1) {
@@ -137,12 +157,12 @@ export default class List extends Component {
                                     </CSSTransition> : null}
                             </TransitionGroup>
                         </div>
-                        <div className='all-product'>
-                            <ul className='main'>
+                        <div className='all-product' ref={(div) => this.div = div}>
+                            <ul className='main clearfix'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index} className="mainList">
                                         {/* 增加查询参数 id  */}
-                                        <Link to={"/details/" + item.id }><img src={item.image}></img></Link>
+                                        <Link to={"/details/" + item.id}><img src={item.image}></img></Link>
                                         <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>

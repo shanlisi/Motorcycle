@@ -4,18 +4,26 @@
 * 第二个参数是callback，用途是发ajax请求新的数据，
 *
 * */
-function getScroll(dom,callback) {
-    let childrenHeight=dom.firstElementChild.scrollHeight,
-        contClientHeight=dom.clientHeight,
-        currenrScroll='';
-    let timer;
-    dom.addEventListener('scroll',function () {
-        if(timer)clearInterval(timer);
-        timer = window.setTimeout(function () {
-            currenrScroll=dom.scrollTop;
-            if(parseFloat(contClientHeight)+currenrScroll+30>=parseFloat(childrenHeight)){
-                callback();
-            }
-        },100)
-    });
+export  default  function getScroll(dom,callback,is) {
+    if(is){
+        let childrenHeight=dom.firstElementChild.scrollHeight,
+            contClientHeight=dom.clientHeight,
+            currenrScroll='';
+        let timer;
+        function fn() {
+            if(timer)clearInterval(timer);
+            timer = window.setTimeout(function () {
+                currenrScroll=dom.scrollTop;
+                childrenHeight=dom.firstElementChild.scrollHeight;
+                if(parseFloat(contClientHeight)+currenrScroll+30>=parseFloat(childrenHeight)){
+                    childrenHeight=dom.firstElementChild.scrollHeight;
+                    callback();
+                }
+            },100)
+        }
+        dom.addEventListener('scroll',fn);
+    }else{
+        console.log(dom.removeEventListener);
+        dom.removeEventListener('scroll',fn);
+    }
 }

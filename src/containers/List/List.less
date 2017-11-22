@@ -92,9 +92,11 @@
     overflow: scroll;
     box-sizing: border-box;
     .main{
-      height: 10rem;
+      //height: 10rem;
       box-sizing: border-box;
       margin-left:-.1rem;
+      &.clearfix:after{
+        content:"";height:0;line-height:0;display:block;visibility:hidden;clear:both;}
       .mainList{
         width:3.7rem;
         background: #fff;
