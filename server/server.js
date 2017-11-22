@@ -118,8 +118,7 @@ function getUsersInfo(cb) {
         if (err) {
             cb([])
         } else {
-            console.log('json数据',data);
-            cb(JSON.parse(data))
+            cb(JSON.parse(data));
         }
     })
 }
@@ -137,7 +136,6 @@ app.get('/shoppingCart/:id', function (req, res) {
         return
     }
     let userId = req.params.id;
-    console.log(userId);
     if (isNaN(Number(userId))) {
         res.json({code: 1, login: true, error: '参数ID必须上传且是数字，例.../shoppingCart/1'});
         return;
@@ -153,93 +151,101 @@ app.get('/shoppingCart/:id', function (req, res) {
 });
 //加入购物车、删除购物车中商品、修改购物车
 app.route('/shoppingCart').post(function (req, res) {
+        if (!req.session.login) {
+            res.json({code: 0, login: false, error: '用户未登录'});
+            return
+        }
+        let {userId, cartInfo} = req.body;
+        if (isNaN(Number(userId))) {
+            res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+            return;
+        }
+        if (isNaN(Number(cartInfo.productId))) {
+            res.json({code: 1, login: true, error: 'cartInfo.productId必须上传且是数字'});
+            return;
+        }
+        getUsersInfo(function (data) {
+            let userInfo = data.find(item => item.id == userId);
+            if (!userInfo) {
+                res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'});
+                return
+            }
+            let tempCartInfo = userInfo.cartInfo.find(item => item.productId == cartInfo.productId && item.typeModel == cartInfo.typeModel);
+            if (tempCartInfo) {
+                tempCartInfo.num += cartInfo.num
+            } else {
+                userInfo.cartInfo.push(cartInfo)
+            }
+            modifyUserInfo(data, function () {
+                res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+            });
+        })
+    }
+).delete(function (req, res) {
     if (!req.session.login) {
-        res.json({code: 0, login: false, error: '用户未登录'});
-        return
-    }
-    let {userId, cartInfo} = req.body;
-    if (isNaN(Number(userId))) {
-        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
-        return;
-    }
-    getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
-        if (!userInfo) {
-            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
-        } else {
-            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
-                let item = userInfo.cartInfo[i];
-                if (item.productId == cartInfo.productId) {
-                    if (item.typeModel == cartInfo.typeModel) {
-                        item.num += cartInfo.num;
-                    } else {
-                        userInfo.cartInfo.push(cartInfo);
+            res.json({code: 0, login: false, error: '用户未登录'});
+            return
+        }
+        let {userId, cartInfo} = req.body;
+        if (isNaN(Number(userId))) {
+            res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+            return;
+        }
+        if (isNaN(Number(cartInfo.productId))) {
+            res.json({code: 1, login: true, error: 'cartInfo.productId必须上传且是数字'});
+            return;
+        }
+        getUsersInfo(function (data) {
+            let userInfo = data.find(item => item.id == userId);
+            if (!userInfo) {
+                res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
+            } else {
+                let isDelete=false;
+                userInfo.cartInfo.forEach((item,index)=>{
+                    if(item.productId == cartInfo.productId && item.typeModel == cartInfo.typeModel){
+                        userInfo.cartInfo.splice(index,1);
+                        isDelete=true;
+                        modifyUserInfo(data, function () {
+                            res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+                        });
                     }
-                    modifyUserInfo(userInfo, function () {
-                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
-                    });
-                    break;
-                }
+                });
+                if(!isDelete){ res.json({code: 1, login: true, error:'未找到对应用户的对应商品和对应型号'})}
             }
+        })
+    }
+).put(function (req, res) {
+    if (!req.session.login) {
+        res.json({code: 0, login: false, error: '用户未登录'});
+        return
+    }
+    let {userId, cartInfo} = req.body;
+    if (isNaN(Number(userId))) {
+        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
+        return;
+    }
+    if (isNaN(Number(cartInfo.productId))) {
+        res.json({code: 1, login: true, error: 'cartInfo.productId必须上传且是数字'});
+        return;
+    }
+    getUsersInfo(function (data) {
+        let userInfo = data.find(item => item.id == userId);
+        if (!userInfo) {
+            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'});
+            return
         }
-    })
+        let tempCartInfo = userInfo.cartInfo.find(item => item.productId == cartInfo.productId && item.typeModel == cartInfo.typeModel);
+        if (tempCartInfo) {
+            tempCartInfo.num = cartInfo.num;
+            modifyUserInfo(data, function () {
+                res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
+            });
+        }else{
+            res.json({code: 1, login: true,error:'修改失败，请检查userId、cartInfo.productId和cartInfo.typeModel是否一一对应' })
+        }
 
-}).delete(function (req, res) {
-    if (!req.session.login) {
-        res.json({code: 0, login: false, error: '用户未登录'});
-        return
-    }
-    let {userId, cartInfo} = req.body;
-    if (isNaN(Number(userId))) {
-        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
-        return;
-    }
-    getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
-        if (!userInfo) {
-            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
-        } else {
-            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
-                let item = userInfo.cartInfo[i];
-                if (item.productId == cartInfo.productId&&item.typeModel == cartInfo.typeModel) {
-                    userInfo.cartInfo.splice(i,1);
-                    modifyUserInfo(userInfo, function () {
-                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
-                    });
-                    break;
-                }
-            }
-        }
-    })
-}).put(function (req, res) {
-    if (!req.session.login) {
-        res.json({code: 0, login: false, error: '用户未登录'});
-        return
-    }
-    let {userId, cartInfo} = req.body;
-    if (isNaN(Number(userId))) {
-        res.json({code: 1, login: true, error: 'userId必须上传且是数字'});
-        return;
-    }
-    getUsersInfo(function (data) {
-        let userInfo = data.find(item => item.id == userId);
-        if (!userInfo) {
-            res.json({code: 1, login: true, error: '未找到该用户，请检查userId是否传递正确'})
-        } else {
-            for (let i = 0, l = userInfo.cartInfo.length; i < l; i++) {
-                let item = userInfo.cartInfo[i];
-                if (item.productId == cartInfo.productId&&item.typeModel == cartInfo.typeModel) {
-                    item.num+=cartInfo.num;
-                    modifyUserInfo(userInfo, function () {
-                        res.json({code: 0, login: true, cartInfo: userInfo.cartInfo})
-                    });
-                    break;
-                }
-            }
-        }
     })
 });
-
 
 //获取用户信息
 app.get('/user/:id', function (req, res) {
@@ -327,13 +333,11 @@ app.post('/signup', function (req, res) {
 });
 //登录，设置一个session：login(true/false)
 app.post('/login', function (req, res) {
-    console.log('--------登录进------------');
     let {userName, password} = req.body;
     if (!userName || !password) {
         res.json({code: 1, error: '请按API文档规定请求'})
     }
     getUsersInfo(function (data) {
-        console.log('------读取用户信息json文件-------');
         let userInfo = data.find(item => (item.userName == userName && item.password == password
         ));
         if (userInfo) {

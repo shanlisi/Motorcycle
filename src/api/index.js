@@ -57,7 +57,7 @@ export function myPut(url,data) {
 }
 export function myDelete(url,data) {
     return fetch(HOST+url,{
-        method:'POST',
+        method:'DELETE',
         credentials:"include",
         headers:{
             "Accept":"application/json",

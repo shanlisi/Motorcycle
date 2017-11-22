@@ -22,18 +22,23 @@ export default class Test extends Component{
         }
     }).then(res=>{
             console.log('加入购物车',res);
-            myPut('/shoppingCart',{
+
+        })
+    };
+    changeCart=()=>{
+        myPut('/shoppingCart',{
                 userId:3,
                 cartInfo: {
                     productId: 1,
-                    num: 3,
+                    num: 1,
                     typeModel: '亮蓝色'
                 }
-            })
+            }).then(res=>{
+            console.log(res);
         })
     };
-    logout=()=>{
-        myGet('/shoppingCart/userId').then(res=>{
+    getCart=()=>{
+        myGet('/shoppingCart/3').then(res=>{
             console.log('获取购物车信息',res);
         })
     };
@@ -58,8 +63,11 @@ export default class Test extends Component{
                     <br/>
                     <button onClick={this.getInfo}>加入购物车-》修改购物车</button>
                     <br/>
-                    <button onClick={this.logout}>获取购物车信息</button>
-                    <button onClick={this.delCart}>获取购物车信息</button>
+                    <button onClick={this.getCart}>获取购物车信息</button>
+                    <br/>
+                    <button onClick={this.changeCart}>修改购物车</button>
+                    <br/>
+                    <button onClick={this.delCart}>删除</button>
                 </div>
             </div>
         )
