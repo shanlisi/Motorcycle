@@ -1,24 +1,25 @@
-.carousel-wrapper{
+.slider-wrapper{
   position: relative;
   height: 5rem;
   width: 100%;
-  .carousel{
+  .carousel-slider{
     width:100%;
     height: 5rem;
-    div{
+    .slider-content{
       width: 100%;
       height: 5rem;
-      img{
+      .slider-img{
         width: 100%;
         height: 100%;
       }
-      .title{
+      .title-bg{
         position: absolute;
         left: 0;
         bottom: 0;
+        width: 100%;
         height: 1rem;
         background-color: rgba(180,183,180,0.4);
-        p{
+        .title-p{
           width: 5rem;
           line-height: 1rem;
           color: #fff;
@@ -31,14 +32,13 @@
     }
   }
 
-  .dots{
+  .slider-dots{
     position: absolute;
     bottom: 0;
     right: .3rem;
     height: 1rem;
     line-height: 1rem;
     span{
-      z-index: 99;
       width: .2rem;
       height: .2rem;
       border: 1px solid #fc5a05;

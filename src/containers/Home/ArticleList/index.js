@@ -13,7 +13,7 @@ export default class ArticleList extends Component {
 
     componentDidMount() {
         myGet('/home/articleList').then(res => {
-            console.log(res);
+            //console.log(res);
             if (res.code === 0) {
                 this.setState({
                     ...this.state.articleList,
@@ -33,7 +33,7 @@ export default class ArticleList extends Component {
                                 <li key={index}  className="articleList">
                                     <img src={item.image}/>
                                     <div>
-                                        <p className="title">{item.title}</p>
+                                        <a href={item.url}><p className="title">{item.title}</p></a>
                                         <div className="content">
                                             <span className="flag">{item.flag}</span>
                                             <span className="time">{item.date}</span>

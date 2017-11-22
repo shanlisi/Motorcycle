@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-import axios from "axios";
 
 import { myGet } from "./../../api/index"
 import MyHeader from "../../components/MyHeader/MyHeader";

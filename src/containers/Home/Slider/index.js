@@ -30,17 +30,17 @@ export default class Slider extends Component{
             }
         };
         return(
-            <div className="carousel-wrapper">
+            <div className="slider-wrapper">
                 {
                          this.state.swipers.length>0?
-                         <ReactSwipe className="carousel" swipeOptions={swipeOptions}>
+                         <ReactSwipe className="carousel-slider" swipeOptions={swipeOptions}>
                             {
                                 this.state.swipers.map((item,index)=>(
                                 <a key={index} href={item.url}>
-                                    <div >
-                                        <img src={item.image}/>
-                                        <div className="title">
-                                            <p>{item.title}</p>
+                                    <div className="slider-content">
+                                        <img className="slider-img" src={item.image}/>
+                                        <div className="title-bg">
+                                            <p className="title-p">{item.title}</p>
                                         </div>
                                     </div>
                                 </a>
@@ -50,7 +50,7 @@ export default class Slider extends Component{
 
                 }
 
-                <div className="dots">
+                <div className="slider-dots">
                     {
                         this.state.swipers.map((item,index)=>(
                                 <span
