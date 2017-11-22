@@ -23,15 +23,13 @@ export default class Login extends Component{
         }).then(res=>{
             if(res.code==0){
                 window.location.href='http://localhost:8555/#/';
+                cookie.set("USER",JSON.stringify(res));
             }else if(res.code==1){
                 alert(res.error);
             }
             console.log(res);
         });
-        cookie.set("USER",JSON.stringify({
-            user:username.value,
-            code:0
-        }));
+
         console.log(username.value, password.value);
         console.log(cookie.get("USER"));
     };
