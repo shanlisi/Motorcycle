@@ -1,0 +1,88 @@
+.select-panel {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+
+    background-color: #f7f7f7;
+
+    .confirm-btn {
+        // position: absolute;
+        // bottom: 0;
+        // left: 0;
+        // text-align: center;
+        width: 100%;
+        height: 35px;
+        background-color: #f86a35;
+    }
+    .color-area {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        align-items: center;
+
+        padding: 10px;
+        box-sizing: border-box;
+        strong {
+            width: 25%;
+            font-weight: normal;
+        }
+        .color-btn-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            .color-btn {
+                width: auto;
+                height: auto;
+                padding: 3px 10px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                position: relative;
+                text-align: center;
+                margin-right: 10px;
+                input {
+                    opacity: 0;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+                
+            }
+        }
+    }
+
+    .buy-amount {
+        display: flex;
+        flex-direction: row;
+        height: 35px;
+        align-items: center;
+        padding: 10px;
+        /* box-sizing: border-box; */
+        width: 100%;
+        span {
+            width: 25%;
+        }
+        button {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            float: left;
+            font-size: 0.4rem;
+        }
+        input {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border: none;
+            text-align: center;
+            float: left;
+            outline: none;
+        }
+    }
+}

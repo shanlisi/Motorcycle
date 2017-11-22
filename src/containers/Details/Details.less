@@ -121,7 +121,39 @@
         right: 0;
 
         width: 100%;
-        height: 2rem;
+        height: 1.5rem;
 
+        display: flex;
+        flex-direction: row;
+
+        background-color: #fbfbfb;
+
+        div, a {
+            display: flex;
+            flex: 1 1;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.28rem;
+            color: white;
+        }
+        .cart-icon {
+            color: black;
+        }
+        .add-cart-btn {
+            background-color: orange;
+        }
+        .buy-btn {
+            background-color: #ff8355;
+        }
+
+    }
+    .cover {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(230, 230, 230, 0.6);
+        position: absolute;
+        top: 0;
+        z-index: 99;
     }
 }

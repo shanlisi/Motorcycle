@@ -1,8 +1,11 @@
 import React,{Component} from 'react';
+import { Link }  from "react-router-dom"
 
-import { myGet } from "./../../api/index"
+import { myGet, myPost } from "./../../api/index"
 import MyHeader from "../../components/MyHeader/MyHeader";
 import Slider from "./slider/slider"
+import ToolTip from "./ToolTip/tooltip"
+import SelectedPanel from "./SelectPanel/selectpanel";
 
 import './Details.less'
 
@@ -28,11 +31,87 @@ class Details extends Component {
                     color: []
                 },
                 inventory: 0,
-            }
-            
+            },
+
+            // 默认用户已经登录
+            isAuth: true,
+
+            // 商品添加到购物车 成功 默认不成功 true 表示添加成功
+            addedSuccess: false,
+
+            // 商品添加到购物车失败 默认不失败 true 表示添加失败
+            addedFailed: false,
+
+            // 是否显示商品类型选择面板
+            isSelectPanelShow: false,
+
+        };
+        this.addProductToCart = this.addProductToCart.bind( this );
+        this.displaySelectPanel = this.displaySelectPanel.bind( this );
+        this.closeSelectPanel = this.closeSelectPanel.bind( this );
+    }
+
+    closeSelectPanel ( event ) {
+        if ( event.target.className === "cover" ) {
+            this.setState( { isSelectPanelShow: !this.state.isSelectPanelShow } );
+            this.container.style.overflowY = "scroll";
         }
     }
     
+    // 显示商品类型选择面板
+    displaySelectPanel () {
+        this.setState( { isSelectPanelShow: !this.state.isSelectPanelShow } );
+        this.container.style.overflowY = "hidden";
+    }
+    
+    // 将当前展示的商品添加到当前登录用户的购物车
+    addProductToCart ( type, amount ) {
+
+        // 检查用户是否登录
+        if ( document.cookie.indexOf( "USER" ) === -1 ) {
+            console.log( "您还没有登录，请先登录" );
+
+            // 用户认证为 false 表明用户没有登录
+            this.setState( { isAuth: false } )
+        }
+
+        // 获取当前登录用户的购物车 数组
+        let cart = this.getCartOfUser();
+       
+
+        // 添加至购物车的单条商品数据信息
+        let data = { userId: 4, cartInfo: {
+            productId: this.state.productDetail.id, 
+            name: this.state.productDetail.name, 
+            price: this.state.productDetail.price, 
+            num: amount, 
+            typeModel: type
+        }}
+
+        // 将当前商品添加到用户的购物车
+        myPost( "/shoppingCart", data ).then( ( response ) => {
+
+            console.log( response );
+
+            if ( response.code === 0 ) {
+                this.setState( { addedSuccess: !this.state.addedSuccess, isSelectPanelShow: !this.state.isSelectPanelShow } )
+            } else {
+                this.setState( { addedFailed: !this.state.addedFailed, isSelectPanelShow: !this.state.isSelectPanelShow } )
+            }
+        })
+    }
+
+    //  获取用户的购物车
+    getCartOfUser () {
+        let cart = [];
+        myGet( "/shoppingCart/" + 4 ).then( ( response ) => {
+            if ( response.code === 0 ) {
+                cart = response.cartInfo 
+            }
+        })
+        return cart;
+    }
+
     componentDidMount () {
     	let productId = this.props.match.params.id;
         myGet( "/productDetail/" + productId ).then( ( response ) => {
@@ -52,7 +131,7 @@ class Details extends Component {
 
                         <MyHeader showBack={true} title="商品详情"/>
 
-                        <div className='my-container product-detail'>
+                        <div className='my-container product-detail' ref={ el => this.container = el } >
 
                             <div className="product-img">
 
@@ -93,12 +172,36 @@ class Details extends Component {
                             </div>
                             
                             <div className="footer-tab">
-                                <div className="cart-icon">
-                                    
-                                </div>
-                                <div className="add-cart-btn">加入购物车</div>
+                                <Link to="/shoppingCart" className="cart-icon">
+                                    <i className="iconfont icon-gouwuche"></i>
+                                    <span> 购物车 </span>
+                                </Link>
+                                <div className="add-cart-btn" onClick={ this.displaySelectPanel }>加入购物车</div>
                                 <div className="buy-btn">立即购买</div>
                             </div>
+                            {
+                                this.state.isSelectPanelShow 
+                                    ?   
+                                        <div className="cover" onClick={ this.closeSelectPanel }>
+                                            <SelectedPanel 
+                                              colors={ this.state.productDetail.typeModel.color } 
+                                                inventory={ this.state.productDetail.inventory } 
+                                                addProductToCart={ this.addProductToCart }
+                                            />
+                                        </div>
+                                    :   null
+                            }
+                            
+
+
+                            {
+                                !this.state.isAuth ? <ToolTip msg="您还没有登录，请先登录" /> : null
+                            }
+
+                            {
+                                this.state.addedSuccess ? <ToolTip msg="商品已经添加到购物车" /> : null
+                            }
+                            {/* <ToolTip  msg="测试文字测试文字测试文字" /> */}
                         </div>
                     </div>
                 )
