@@ -40,14 +40,14 @@ export default class Login extends Component{
                 <div className='my-container login'>
                     <div className="content">
                         <div className="pic">
-                            <img src="http://img.hb.aicdn.com/17ad02a021551ba923a7c06f683a14fd22f5280d3ce5e-3VCFHH_fw658" alt=""/>
+                            <img src="http://localhost:3000/public/images/productList/list-id-4.jpg" alt=""/>
                         </div>
                         <div className="input">
-                            <span>用户名/手机号</span>
+                            <span>用户名：</span>
                             <input type="text" placeholder="请输入用户名/手机号" id="username"/>
                         </div>
                         <div className="input">
-                            <span>密码</span>
+                            <span>密码：</span>
                             <input type="text" placeholder="请输入密码" id="password"/>
                         </div>
                         <div className="button" onClick={this.logon}>登录</div>

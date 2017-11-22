@@ -88,23 +88,23 @@ export default class Mine extends Component {
                     <ul className="mine-nav">
                         <li>
                             <Link to="/shoppingCart">
-                                <i className="iconfont icon-iconcart"></i>
+                                <i className="iconfont icon-gouwuche"></i>
                                 <span>我的购物车</span>
-                                <i className="iconfont icon-icon-arrow-right"></i>
+                                <i className="iconfont icon-arrow-right"></i>
                             </Link>
                         </li>
                         <li>
                             <Link to="/sub">
-                                <i className="iconfont icon-iconfontdizhi2"></i>
+                                <i className="iconfont icon-dingdan"></i>
                                 <span>我的订单</span>
-                                <i className="iconfont icon-icon-arrow-right"></i>
+                                <i className="iconfont icon-arrow-right"></i>
                             </Link>
                         </li>
                         <li>
                             <Link to="/map">
-                                <i className="iconfont icon-icon_lingdang"></i>
-                                <span>收获地址</span>
-                                <i className="iconfont icon-icon-arrow-right"></i>
+                                <i className="iconfont icon-dizhi"></i>
+                                <span>收货地址</span>
+                                <i className="iconfont icon-arrow-right"></i>
                             </Link>
                         </li>
                         <li>
@@ -112,11 +112,11 @@ export default class Mine extends Component {
                             <Link to={{
                                 pathname: `/profile`,
                                 state: 'hello',
-                                params:{userinfo:this.state.userInfo}
+                                params: {userinfo: this.state.userInfo}
                             }}>
-                                <i className="iconfont icon-iconfontgerenziliao"></i>
+                                <i className="iconfont icon-ziliao"></i>
                                 <span>我的资料</span>
-                                <i className="iconfont icon-icon-arrow-right"></i>
+                                <i className="iconfont icon-arrow-right"></i>
                             </Link>
                         </li>
                     </ul>

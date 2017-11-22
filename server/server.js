@@ -64,6 +64,7 @@ app.get('/home/articleList', function (req, res) {
 app.get('/productList/getList', function (req, res) {
     let offset = +req.query.offset || 0;
     let limit = +req.query.limit || 5;
+
     if (offset > productList.length) {
         res.json({code: 1, error: '获取数据的起始量(offset)超出范围'});
         return;

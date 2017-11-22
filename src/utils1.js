@@ -10,7 +10,12 @@ export  default  function getScroll(dom,callback,is) {
             contClientHeight=dom.clientHeight,
             currenrScroll='';
         let timer;
+        let  n=0;
         function fn() {
+            if(n>4){
+                return
+                }
+            n++;
             if(timer)clearInterval(timer);
             timer = window.setTimeout(function () {
                 currenrScroll=dom.scrollTop;
@@ -22,8 +27,5 @@ export  default  function getScroll(dom,callback,is) {
             },100)
         }
         dom.addEventListener('scroll',fn);
-    }else{
-        console.log(dom.removeEventListener);
-        dom.removeEventListener('scroll',fn);
     }
 }
