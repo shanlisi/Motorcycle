@@ -34,9 +34,9 @@ export default class ShoppingCart extends Component {
             userInfo: {
                 userId: null
             },
-            
+
             // 购物车
-            /** 
+            /**
              *  name: "豪爵铃木GW250"
              *  num: 10
              *  price: 23880
@@ -52,8 +52,10 @@ export default class ShoppingCart extends Component {
             allSelected: false,
 
             // 用户是否登录 默认用户已经登录
-            isAuth: true 
-        }
+            isAuth: true,
+
+            checkAry:[]
+        };
 
         this.addHandle = this.addHandle.bind( this );
         this.minusHandle = this.minusHandle.bind( this );
@@ -86,8 +88,12 @@ export default class ShoppingCart extends Component {
                 response.cartInfo.forEach( ( item, index ) => {
                     item.isCheck = false;
 
-                })
-                this.setState( { cart: response.cartInfo } );
+                });
+                let checkAry=[];
+                response.cartInfo.forEach(item=>{
+                    checkAry.push(true)
+                });
+                this.setState( { ...this.state,cart: response.cartInfo,checkAry } );
             } else {
                 this.setState( { isAuth: false } );
             }
@@ -140,8 +146,22 @@ export default class ShoppingCart extends Component {
 
         this.setState( { cart: [ ...this.state.cart, ...newCart ] });
     }
+    handleClick=(index)=>{
+        let checkAry=this.state.checkAry;
+        checkAry[index]= !checkAry[index];
+         this.setState({
+             ...this.state,
+             checkAry
+         })
+    };
+    handleClickAll=()=>{
+        let checkAry=this.state.checkAry.map(item=>!item);
+        this.setState({
+            ...this.state,
+            checkAry
+        })
+    };
     render(){
-        
         return (
             <div>
                 {/* <AuthRoute /> */}
@@ -161,7 +181,7 @@ export default class ShoppingCart extends Component {
                                             <h4 className="item-name"> 牛魔王官方旗舰店 </h4>
                                             <div className="item-body">
                                                 <div className="selected">
-                                                    <input type="checkbox" onChange={ (v ) => console.log( arguments )  }/>
+                                                    <input type="checkbox" onChange={ (v ) => console.log( arguments )  } checked={this.state.checkAry[index]} onClick={()=>{this.handleClick(index)}}/>
                                                 </div>
                                                 <div className="item-img">
                                                     <img src="" alt="这是商品图片 但是暂时没有 以后坑定会有" />
@@ -192,7 +212,7 @@ export default class ShoppingCart extends Component {
                     
                     <div className="cart-footer">
                         <div className="footer-info">
-                            <input type="checkbox" name="all_selected" onChange={ v => this.setState( { allSelected: v.target.checked } ) }/>
+                            <input type="checkbox" name="all_selected" onChange={ v => this.setState( { allSelected: v.target.checked } ) } checked={!this.state.checkAry.some(item=>!item)} onClick={this.handleClickAll}/>
                             <span>全选</span> 
                             <span>
                                 合计：
