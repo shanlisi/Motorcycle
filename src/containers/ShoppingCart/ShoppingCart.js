@@ -155,7 +155,8 @@ export default class ShoppingCart extends Component {
          })
     };
     handleClickAll=()=>{
-        let checkAry=this.state.checkAry.map(item=>!item);
+        let  flag=this.state.checkAry.some(item=>!item);
+        let checkAry=this.state.checkAry.map(item=>flag);
         this.setState({
             ...this.state,
             checkAry
