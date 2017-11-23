@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import { Link }  from "react-router-dom"
 
+import cookie from "./../App/cookie"
 import { myGet, myPost } from "./../../api/index"
 import MyHeader from "../../components/MyHeader/MyHeader";
 import Slider from "./slider/slider"
@@ -66,21 +67,23 @@ class Details extends Component {
     
     // 将当前展示的商品添加到当前登录用户的购物车
     addProductToCart ( type, amount ) {
-
-        // 检查用户是否登录
-        if ( document.cookie.indexOf( "USER" ) === -1 ) {
+        
+        
+        // 检查用户是否登录 cookie 不存在 或者 cookie 中登录状态为假
+        if ( !JSON.parse( cookie.get( "USER" ) ) || JSON.parse( cookie.get( "USER" ) ).code !== 0 ) {
             console.log( "您还没有登录，请先登录" );
 
             // 用户认证为 false 表明用户没有登录
             this.setState( { isAuth: false } )
+            return;
         }
 
         // 获取当前登录用户的购物车 数组
         let cart = this.getCartOfUser();
-       
+        let userId = JSON.parse( cookie.get( "USER" ) ).userId;
 
         // 添加至购物车的单条商品数据信息
-        let data = { userId: 4, cartInfo: {
+        let data = { userId: userId, cartInfo: {
             productId: this.state.productDetail.id, 
             name: this.state.productDetail.name, 
             price: this.state.productDetail.price, 
@@ -91,7 +94,7 @@ class Details extends Component {
         // 将当前商品添加到用户的购物车
         myPost( "/shoppingCart", data ).then( ( response ) => {
 
-            console.log( response );
+            // console.log( response );
 
             // 商品添加成功 并且用户已经登录
             if ( response.code === 0 && response.login ) {
@@ -201,13 +204,9 @@ class Details extends Component {
                             
 
 
-                            {
-                                !this.state.isAuth ? <ToolTip msg="您还没有登录，请先登录" /> : null
-                            }
+                            { !this.state.isAuth ? <ToolTip msg="您还没有登录，请先登录" /> : null }
 
-                            {
-                                this.state.addedSuccess ? <ToolTip msg="商品已经添加到购物车" /> : null
-                            }
+                            { this.state.addedSuccess ? <ToolTip msg="商品已经添加到购物车" /> : null }
                             {/* <ToolTip  msg="测试文字测试文字测试文字" /> */}
                         </div>
                     </div>

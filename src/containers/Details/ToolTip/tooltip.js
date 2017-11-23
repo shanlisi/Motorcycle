@@ -17,7 +17,7 @@ class ToolTip extends Component {
     componentDidMount () {
         this.timer = setTimeout( () => {
             this.setState( { isShow: false } )
-        }, 2000);
+        }, 1500);
     }
     render () {
         return (
