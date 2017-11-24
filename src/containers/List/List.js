@@ -10,7 +10,11 @@ export default class List extends Component {
         super();
         this.state = {
             isShow: false,
-            productList: [], id: '',is:true
+            productList: [],
+            id: '',
+            offset:0,
+            limit:6,
+            hasMore:true
         }
     }
 
@@ -24,7 +28,6 @@ export default class List extends Component {
             return function (object1, object2) {
                 var value1 = object1[propertyName];
                 var value2 = object2[propertyName];
-                console.log(value1, value2);
                 return value1.localeCompare(value2);
             }
         } else {
@@ -76,31 +79,21 @@ export default class List extends Component {
         }
         this.setState({productList: this.state.productList});
     };
+
     change = () => {
-        var offset = 0;
-        var limit = 6;
-        return () => {
-            offset += limit;
-            myGet('/productList/getList?offset=' + offset + '&limit=' + limit).then(res => {
-                console.log(res);
+            myGet('/productList/getList?offset=' + this.state.offset + '&limit=' + this.state.limit).then(res => {
                 if(res.code==1){
-                    getScroll(this.div,this.change(),false)
+                    getScroll(this.div,this.change(),false);
                     return;
                 }
-
-                this.setState({...this.state, productList: [...this.state.productList,...res.productList]});
+                this.setState({...this.state, productList: [...this.state.productList,...res.productList],offset:this.state.offset+this.state.limit,hasMore:res.hasMore});
                 }
             );
-
-        }
-
     };
 
-
     componentDidMount() {
-
-        this.change()();
-        getScroll(this.div, this.change(),this.state.is);
+        this.change();
+        getScroll(this.div, this.change,true);
     };
 
     search = () => {
@@ -136,7 +129,7 @@ export default class List extends Component {
                             <TransitionGroup>
                                 {this.state.isShow ?
                                     <CSSTransition timeout={1000} classNames='fadeIn'>
-                                        <ul>
+                                        <ul onClick={()=>{this.setState({...this.state,isShow:false})}}>
                                             <li onClick={() => {
                                                 this.sort('price', true)
                                             }}>最贵
@@ -169,6 +162,7 @@ export default class List extends Component {
                                 )) : <li className='no-fond'>没有搜索到内容</li>
                                 }
                             </ul>
+                            {this.state.hasMore?null:<p style={{textAlign:'center',lineHeight:'.75rem'}}>别扯了，我是有底线的~~~</p>}
                         </div>
 
                     </div>

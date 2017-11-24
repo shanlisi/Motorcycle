@@ -13,6 +13,7 @@
     box-sizing: border-box;
     position: fixed;
     background: #fff;
+
     input{
       width: 4.8rem;
       height: 0.58rem;
@@ -23,7 +24,8 @@
       padding:0 .5rem;
       box-sizing: border-box;
       float: left;
-      margin-top:.14rem;
+      font-size:.26rem;
+      margin-top:.17rem;
     }
     .search-span{
       margin-top:.14rem;
@@ -44,8 +46,9 @@
         border-radius:.10rem;
         text-align: center;
         line-height: 0.58rem;
-        padding: .05rem .08rem;
+
         box-sizing: border-box;
+        font-size:.26rem;
         color:#757575;
       }
       .close{
@@ -72,12 +75,12 @@
       padding:0 .24rem;
       box-sizing: border-box;
       li{
-        border-bottom:1px solid #757575;
+        border-bottom:1px solid #ddd;
         color:#757575;
         line-height:.74rem;
         height: .74rem;
         &:hover{
-          color:red;
+          color: orangered;
         }
       }
     }
@@ -87,7 +90,6 @@
     clear: both;
     background:#f8f8f8;
     padding-top: 0.9rem;
-    padding-bottom: 1rem;
     height:100%;
     overflow: scroll;
     box-sizing: border-box;
@@ -116,15 +118,16 @@
         .product-name{
           font-size: .30rem;
           font-weight: 600;
-          margin-top: .24rem;
+          margin-top: .04rem;
           margin-left: 0.24rem;
           white-space:nowrap;
           text-overflow:ellipsis;
+          color: #555;
           overflow: hidden;
         }
         .price{
-          color:red;
-          margin: .3rem 0 .2rem .24rem;
+          color:orangered;
+          margin: .1rem 0 .1rem .24rem ;
         }
       }
       .no-fond{
