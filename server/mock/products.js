@@ -84,6 +84,17 @@ let productList = [
         hot: 240
     }
 ];
+for (let i = 0; i < 50; i++) {
+    let titleAry=['本田','铃木','雅马哈','川崎','贝纳利','春风','豪爵','宝马','KTM','升仕'];
+    let modelAry=['z250','R310','cb190','GW250','cb500','z900','650nk','Duke650','1200','750'];
+    let obj={id:1};
+    obj.title=titleAry[Math.round(Math.random()*9)]+' '+modelAry[Math.round(Math.random()*9)];
+    obj.image=prefix + 'images/productList/list-id-'+ Math.round(Math.random()*9+1) +'.jpg';
+    obj.date='2016/0'+Math.round(Math.random()*8+1)+'/'+Math.round(Math.random()*2)+Math.round(Math.random()*8+1);
+    obj.price=Math.round(Math.random()*30000+5000);
+    obj.hot=Math.round(Math.random()*3000);
+    productList.push(obj);
+}
 
 //商品详情数据
 let products = [

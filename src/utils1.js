@@ -12,16 +12,18 @@ export  default  function getScroll(dom,callback,is) {
         let timer;
         let  n=0;
         function fn() {
-            if(n>4){
+            if(n>11){
                 return
                 }
-            n++;
+
             if(timer)clearInterval(timer);
             timer = window.setTimeout(function () {
                 currenrScroll=dom.scrollTop;
                 childrenHeight=dom.scrollHeight;
                 if(parseFloat(contClientHeight)+currenrScroll+30 >= parseFloat(childrenHeight)){
                     childrenHeight=dom.firstElementChild.scrollHeight;
+                    n++;
+                    console.log(n);
                     callback();
                 }
             },100)

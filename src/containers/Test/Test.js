@@ -146,7 +146,10 @@ export default class Test extends Component {
                        <hr/>
                        <input type="checkbox" checked={(this.state.checked1&&this.state.checked2&&this.state.checked3&&this.state.checked4) } onClick={this.handleCheckedAll}/>全选 <br/>
                    </div>
+                    <h2 className={'400'}>你好呀</h2>
                 </div>
+
+
             </div>
         )
     }
