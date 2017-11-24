@@ -5,9 +5,8 @@ import cookie from "./../App/cookie"
 
 import MyHeader from "../../components/MyHeader/MyHeader";
 import ToolTip from "./../Details/ToolTip/tooltip"
-// import AuthRoute from "./AuthRoute/authRoute"
 
-import { myGet, myDelete } from '../../api/index';
+import { myGet, myDelete, myPost, myPut } from '../../api/index';
 
 
 
@@ -21,9 +20,6 @@ import { myGet, myDelete } from '../../api/index';
  *      以及 
  *      全选 allSelected 反选 invertSelected  单选 singleSelected 小计 subtotal 总计 totalPrice
  */
-
-
-
 export default class ShoppingCart extends Component {
 
     constructor ( props ) {
@@ -31,9 +27,7 @@ export default class ShoppingCart extends Component {
         this.state = {
 
             // 用户信息
-            userInfo: {
-                userId: null
-            },
+            userInfo: { userId: null },
 
             // 购物车
             /**
@@ -49,8 +43,6 @@ export default class ShoppingCart extends Component {
             // 购物车是否拉取成功 默认成功
             cartSuccess: true,
 
-            
-
             // 用户是否登录 默认用户已经登录
             isAuth: true,
 
@@ -58,15 +50,13 @@ export default class ShoppingCart extends Component {
             totalPrice: 0.00
         };
 
-        this.addHandle = this.addHandle.bind( this );
-        this.minusHandle = this.minusHandle.bind( this );
         this.del = this.del.bind( this) ;
         this.changeChecked = this.changeChecked.bind( this );
         this.switchAllSelected = this.switchAllSelected.bind( this );
+        this.changeProductNumber = this.changeProductNumber.bind( this );
     }
-    componentDidMount () {
-        console.log( JSON.parse( cookie.get( 'USER' ) )  );
 
+    componentDidMount () {
         /**
          * 从 cookie 中获取用户登录信息 
          * 或者 cookie 中不存在 USER 字段 表明用户没有注册或者登录过
@@ -88,8 +78,6 @@ export default class ShoppingCart extends Component {
                 return;
             }
         })
-
-        console.log( userId );
 
 
         // 将用户 id 保存至 state 
@@ -116,37 +104,45 @@ export default class ShoppingCart extends Component {
         })
     }
 
-
-    // 商品购买数量减一
-    addHandle ( id, type ) {
+    /**
+     * @description: 对商品数量执行 加 或 减 操作
+     * @param {Number} id 
+     * @param {String} type 
+     * @param {String} action 
+     */
+    changeProductNumber ( id, type, action ) {
         let targetProduct = this.state.cart.filter( ( item ) => {
             return item.productId == id && item.typeModel == type ;
-        }) 
+        });
         targetProduct = targetProduct[0];
 
-        targetProduct.num += 1;
 
-        let totalPrice = this.computedTotalPrice( this.state.cart );
+        if ( action == "add" ) {
+            targetProduct.num += 1;
+        } else if ( action == "minus" ) {
+            targetProduct.num -= 1;
+        }  
 
-        this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
+
+        let changeNumData = { 
+            userId: this.state.userInfo.userId, 
+            cartInfo: {
+                productId: targetProduct.productId,
+                typeModel: targetProduct.typeModel,
+                num: targetProduct.num
+            }
+        };
+
+        myPut( "/shoppingcart", changeNumData ).then( ( response ) => {
+            console.log( response );
+            if ( response.code === 0 && response.login ) {
+                let totalPrice = this.computedTotalPrice( this.state.cart );
+                
+                this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
+            } 
+        });
     }
 
-    // 对商品购买数量减一
-    minusHandle ( id, type ) {
-        let targetProduct = this.state.cart.filter( ( item ) => {
-            return item.productId == id && item.typeModel == type ;
-        }) 
-        targetProduct = targetProduct[0];
-
-        if ( targetProduct.num == 1 ) {
-            return;
-        }
-        targetProduct.num -= 1;
-        
-        let totalPrice = this.computedTotalPrice( this.state.cart );
-
-        this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
-    }
 
     // 删除商品
     del ( id, type ) {
@@ -157,11 +153,21 @@ export default class ShoppingCart extends Component {
         });
 
         let _newCart = this.state.cart;
-        _newCart.splice( delProductIndex, 1 );
 
-        let totalPrice = this.computedTotalPrice( _newCart );
+        let delProduct = _newCart[delProductIndex];
 
-        this.setState( { cart: _newCart, totalPrice: totalPrice } )
+        let delData = { userId: this.state.userInfo.userId, cartInfo: { productId: delProduct.productId, typeModel: delProduct.typeModel } };
+        
+        myDelete( "/shoppingCart", delData ).then( ( response ) => {
+
+            if ( response.code === 0 && response.login ) {
+                _newCart.splice( delProductIndex, 1 );
+                
+                let totalPrice = this.computedTotalPrice( _newCart );
+                
+                this.setState( { cart: _newCart, totalPrice: totalPrice } )
+            }
+        });
     }
 
     // 改变单个商品的选中状态 对商品的 isChecked 取反
@@ -175,7 +181,6 @@ export default class ShoppingCart extends Component {
             }
             return item;
         });
-
          
         let totalPrice = this.computedTotalPrice( _newCart );
         this.setState( { cart: _newCart, totalPrice: totalPrice } );
@@ -229,7 +234,6 @@ export default class ShoppingCart extends Component {
 
                 { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车" /> : null }
 
-
                 <div className='my-container shop-cart-container'>
                     {
                         <ul className="shop-cart">
@@ -256,9 +260,9 @@ export default class ShoppingCart extends Component {
                                                     <p> { item.name } </p>
                                                     <p className="type"> { item.typeModel } </p>
                                                     <div className="counter">
-                                                        <button onClick={ () => this.minusHandle( item.productId, item.typeModel ) }>-</button>
+                                                        <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "minus" ) }>-</button>
                                                         <input type="text" value={ item.num } onChange={ () => {} }/>
-                                                        <button onClick={ () => this.addHandle( item.productId, item.typeModel ) }>+</button>
+                                                        <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "add" ) }>+</button>
                                                     </div>
 
                                                     <span 
@@ -272,14 +276,11 @@ export default class ShoppingCart extends Component {
                                             </div>
                                             <div className="item-footer">
                                                 <span>小计：<strong>￥ { item.price * item.num } </strong> 元</span>
-                                                <span>应付定金：<strong>￥100800</strong> 元</span>
                                             </div>
                                         </li>
                                     )
                                 })
-                            }
-
-                            
+                            }                        
                         </ul>
                     }
                     
@@ -307,4 +308,4 @@ export default class ShoppingCart extends Component {
             </div>
         )
     }
-}
+} 
