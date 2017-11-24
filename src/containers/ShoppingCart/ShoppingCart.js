@@ -200,6 +200,16 @@ export default class ShoppingCart extends Component {
         this.setState( { cart: _newCart, totalPrice: totalPrice } );
     }
 
+    handleClick=(index)=>{
+        let checkAry=this.state.checkAry;
+        checkAry[index]= !checkAry[index];
+         this.setState({
+             ...this.state,
+             checkAry
+         })
+    };
+
+
 
     // 计算总价
     computedTotalPrice ( cart ) {
