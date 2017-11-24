@@ -6,7 +6,7 @@ let session = require('express-session');
 //服务端口号
 let port = 3000;
 //允许前端跨域访问的域名
-let {prefixOfWebpack} = require('./mock/prefix');
+let {prefixOfWebpack,prefix} = require('./mock/prefix');
 
 //得到首页的相关数据
 let {swipers, articleList} = require('./mock/home');
@@ -175,6 +175,7 @@ app.route('/shoppingCart').post(function (req, res) {
             if (tempCartInfo) {
                 tempCartInfo.num += cartInfo.num
             } else {
+                cartInfo.image=prefix+'images/productList/list-id-'+cartInfo.productId+'.jpg';
                 userInfo.cartInfo.push(cartInfo)
             }
             modifyUserInfo(data, function () {

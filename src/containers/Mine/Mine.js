@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import './Mine.less';
 import MyHeader from "../../components/MyHeader/MyHeader";
-import cookie from  '../App/cookie'
+import cookie from '../App/cookie'
 import {myGet} from '../../api/index'
 import LoadPicture from "../../components/LoadPicture/index";
+
 export default class Mine extends Component {
     constructor() {
         super();
@@ -15,22 +16,21 @@ export default class Mine extends Component {
     }
 
     handleOut = () => {
-       myGet('/logout').then(res=>{
-           console.log(res);
-       })
+        myGet('/logout').then(res=>{
+            if(res.code==1){alert('退出失败，请重试')}
+        });
+        cookie.remove('USER')
+
     };
     handleTack = () => {
         let userID = JSON.parse(cookie.get('USER')).userId;
         if (userID) {
             myGet('/user/' + userID).then(res => {
                 if (res.code == 0 && res.login) {
-                        console.log("=====",res.userInfo);
-                        this.setState({userInfo: res.userInfo});
-                        console.log(res.userInfo);
-                        console.log(this.state.userInfo);
-                }else {
+                    this.setState({userInfo: res.userInfo});
+
+                } else {
                     window.location.href = 'http://localhost:8555/#/login';
-                    alert(res.error);
                 }
             });
         } else {
@@ -39,8 +39,9 @@ export default class Mine extends Component {
     };
 
     componentDidMount() {
-        this. handleTack();
+        this.handleTack();
     }
+
     // [{"name":"libai","phone":"15010015294","dizhi":"北京昌平区回龙观东大街3号楼珠峰培训3楼快递存放处"}]
     render() {
         return (
@@ -61,7 +62,7 @@ export default class Mine extends Component {
                         </div>
                         <div className="mine-right">
                             <Link to='/login' className="mine-out" onClick={this.handleOut}
-                                  >退出</Link>
+                            >退出</Link>
                         </div>
 
                     </div>
