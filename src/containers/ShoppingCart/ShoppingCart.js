@@ -19,7 +19,7 @@ import { myGet, myDelete } from '../../api/index';
  * 2 获取用户购物车  将用户的购物车数据集保存到 组件的 state 中
  * 3 实现购物车中单个商品的 增 add 删 del 减 minus 
  *      以及 
- *      全选 allSelected 反选 invertSelected  单选 singleSelected 小计 subtotal 总计 total
+ *      全选 allSelected 反选 invertSelected  单选 singleSelected 小计 subtotal 总计 totalPrice
  */
 
 
@@ -37,63 +37,79 @@ export default class ShoppingCart extends Component {
 
             // 购物车
             /**
-             *  name: "豪爵铃木GW250"
-             *  num: 10
-             *  price: 23880
-             *  productId: "3"
-             *  typeModel: "冰川白"
+             *  name: "豪爵铃木GW250"     商品名称
+             *  num: 10                  商品购买数量
+             *  price: 23880             商品价格 
+             *  productId: "3"           商品 id
+             *  typeModel: "冰川白"       商品类型
+             *  isChecked: false         商品是否被选中 默认 false 表示没有被选中
              */
             cart: [],
 
             // 购物车是否拉取成功 默认成功
             cartSuccess: true,
 
-            // 全选
-            allSelected: false,
+            
 
             // 用户是否登录 默认用户已经登录
             isAuth: true,
 
-            checkAry:[]
+            // 总价
+            totalPrice: 0.00
         };
 
         this.addHandle = this.addHandle.bind( this );
         this.minusHandle = this.minusHandle.bind( this );
         this.del = this.del.bind( this) ;
-        this.handleChange = this.handleChange.bind( this );
+        this.changeChecked = this.changeChecked.bind( this );
+        this.switchAllSelected = this.switchAllSelected.bind( this );
     }
     componentDidMount () {
         console.log( JSON.parse( cookie.get( 'USER' ) )  );
 
-        let userid = JSON.parse( cookie.get( 'USER' ) ).userId;
+        /**
+         * 从 cookie 中获取用户登录信息 
+         * 或者 cookie 中不存在 USER 字段 表明用户没有注册或者登录过
+         * 存在 USER 字段 则取出用户的 id 
+         */
+        let userId = null;
+        if ( JSON.parse( cookie.get( 'USER' ) )  ) {
+            userId = JSON.parse( cookie.get( 'USER' ) ).userId;
+        } else {
+            this.setState( { isAuth: false } );
+            return;
+        }
+        
 
-        // 检查用户是否已经登录
-        myGet( "/user/" + userid ).then( ( response ) => {
+        // 检查用户是否已经登录 从 session 中检查用户的登录状态
+        myGet( "/user/" + userId ).then( ( response ) => {
             if ( response.code === 0 && !response.login  ) {
                 this.setState( { isAuth: false } );
                 return;
             }
         })
 
+        console.log( userId );
+
+
         // 将用户 id 保存至 state 
         this.setState( { userInfo: { userId: JSON.parse( cookie.get( 'USER' ) ).userId } } )
 
         
-        console.log( userid );
+        /**
+         * 根据用户 id 获取用户购物车信息
+         * 对购物车中的每一条商品添加一个属性 isChecked, 初始为 false
+         */
+        myGet( "/shoppingCart/" + userId ).then( ( response ) => {
 
-        // 根据用户 id 获取用户购物车信息
-        myGet( "/shoppingCart/" + userid ).then( ( response ) => {
             console.log( response );
-            if ( response.code === 0 && response.login ) {
-                response.cartInfo.forEach( ( item, index ) => {
-                    item.isCheck = false;
 
-                });
-                let checkAry=[];
-                response.cartInfo.forEach(item=>{
-                    checkAry.push(true)
-                });
-                this.setState( { ...this.state,cart: response.cartInfo,checkAry } );
+            if ( response.code === 0 && response.login ) {
+                let initCart = response.cartInfo.map( ( item, index ) => {
+                    item.isChecked = false;
+                    return item;
+                })
+                this.setState( { cart: initCart } );
             } else {
                 this.setState( { isAuth: false } );
             }
@@ -101,20 +117,22 @@ export default class ShoppingCart extends Component {
     }
 
 
+    // 商品购买数量减一
     addHandle ( id, type ) {
-        console.log( id );
         let targetProduct = this.state.cart.filter( ( item ) => {
             return item.productId == id && item.typeModel == type ;
         }) 
         targetProduct = targetProduct[0];
 
         targetProduct.num += 1;
-       
-        this.setState( { cart: [ ...this.state.cart, ...targetProduct ] })
-        
+
+        let totalPrice = this.computedTotalPrice( this.state.cart );
+
+        this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
     }
+
+    // 对商品购买数量减一
     minusHandle ( id, type ) {
-        console.log( id );
         let targetProduct = this.state.cart.filter( ( item ) => {
             return item.productId == id && item.typeModel == type ;
         }) 
@@ -124,28 +142,59 @@ export default class ShoppingCart extends Component {
             return;
         }
         targetProduct.num -= 1;
-       
-        this.setState( { cart: [ ...this.state.cart, ...targetProduct ] })
+        
+        let totalPrice = this.computedTotalPrice( this.state.cart );
+
+        this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
     }
 
+    // 删除商品
     del ( id, type ) {
 
-        console.log( id );
-        let newCart = this.state.cart.filter( ( item ) => {
-            return item.productId !== id && item.typeModel !== type;
-        }) 
-        this.setState( { cart: newCart } )
+        // 获取要删除的商品 在 cart 数组中的数组 继而使用 splice 来删除
+        let delProductIndex = this.state.cart.findIndex( ( item, index ) => {
+            return item.productId == id && item.typeModel == type;
+        });
+
+        let _newCart = this.state.cart;
+        _newCart.splice( delProductIndex, 1 );
+
+        let totalPrice = this.computedTotalPrice( _newCart );
+
+        this.setState( { cart: _newCart, totalPrice: totalPrice } )
     }
 
-    handleChange ( v, id, type ) {
-        let newCart = this.state.cart.filter( ( p, i ) => {
-            return p.productId == item.productId && p.typeModel == item.typeModel 
-        })
-        newCart = newCart[0];
-        newCart.isCheck = v.target.checked;
+    // 改变单个商品的选中状态 对商品的 isChecked 取反
+    // 商品id 商品类型 商品在数组中对应索引
+    changeChecked ( id, type, index ) {
 
-        this.setState( { cart: [ ...this.state.cart, ...newCart ] });
+        let _cart = this.state.cart;
+        let _newCart = _cart.map( ( item, index ) => {
+            if ( item.productId == id && item.typeModel == type ) {
+                item.isChecked = !item.isChecked;
+            }
+            return item;
+        });
+
+         
+        let totalPrice = this.computedTotalPrice( _newCart );
+        this.setState( { cart: _newCart, totalPrice: totalPrice } );
     }
+     
+
+    // 切换全选 和 全不选
+    switchAllSelected ( event ) {
+        
+        let _cart = this.state.cart;
+        let _newCart = _cart.map( ( item, index ) => {
+            item.isChecked = event.target.checked;
+            return item;
+        });
+        
+        let totalPrice = this.computedTotalPrice( _newCart );
+        this.setState( { cart: _newCart, totalPrice: totalPrice } );
+    }
+
     handleClick=(index)=>{
         let checkAry=this.state.checkAry;
         checkAry[index]= !checkAry[index];
@@ -154,23 +203,32 @@ export default class ShoppingCart extends Component {
              checkAry
          })
     };
-    handleClickAll=()=>{
-        let  flag=this.state.checkAry.some(item=>!item);
-        let checkAry=this.state.checkAry.map(item=>flag);
-        this.setState({
-            ...this.state,
-            checkAry
+
+
+
+    // 计算总价
+    computedTotalPrice ( cart ) {
+        // 取得购物车中商品 isChecked 为 true 的项
+        let productsHasSelected = cart.filter( ( item, index ) => {
+            return item.isChecked;
+        });
+
+        let totalPrice = 0;
+
+        productsHasSelected.forEach( ( item ) => {
+            totalPrice += ( item.num * item.price )
         })
-    };
+        return totalPrice;
+    }
+
     render(){
         return (
             <div>
-                {/* <AuthRoute /> */}
+                 
                 <MyHeader showBack={true} title="购物车"/>
 
                 { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车" /> : null }
 
-                
 
                 <div className='my-container shop-cart-container'>
                     {
@@ -182,11 +240,18 @@ export default class ShoppingCart extends Component {
                                             <h4 className="item-name"> 牛魔王官方旗舰店 </h4>
                                             <div className="item-body">
                                                 <div className="selected">
-                                                    <input type="checkbox" onChange={ (v ) => console.log( arguments )  } checked={this.state.checkAry[index]} onClick={()=>{this.handleClick(index)}}/>
+
+                                                    <input type="checkbox" 
+                                                        onChange={ () => this.changeChecked( item.productId, item.typeModel, index ) } 
+                                                        checked={ item.isChecked }
+                                                    />
+
                                                 </div>
+
                                                 <div className="item-img">
                                                     <img src="" alt="这是商品图片 但是暂时没有 以后坑定会有" />
                                                 </div>
+
                                                 <div className="item-body-content">
                                                     <p> { item.name } </p>
                                                     <p className="type"> { item.typeModel } </p>
@@ -195,7 +260,14 @@ export default class ShoppingCart extends Component {
                                                         <input type="text" value={ item.num } onChange={ () => {} }/>
                                                         <button onClick={ () => this.addHandle( item.productId, item.typeModel ) }>+</button>
                                                     </div>
-                                                    <span className="delete-icon iconfont icon-shanchu" onClick={ () => this.del( item.productId, item.typeModel ) }>删除</span>
+
+                                                    <span 
+                                                        className="delete-icon iconfont icon-shanchu" 
+                                                        onClick={ () => this.del( item.productId, item.typeModel ) }
+                                                    >
+                                                         
+                                                    </span>
+
                                                 </div>
                                             </div>
                                             <div className="item-footer">
@@ -213,17 +285,17 @@ export default class ShoppingCart extends Component {
                     
                     <div className="cart-footer">
                         <div className="footer-info">
-                            <input type="checkbox" name="all_selected" onChange={ v => this.setState( { allSelected: v.target.checked } ) } checked={!this.state.checkAry.some(item=>!item)} onClick={this.handleClickAll}/>
+                            <input 
+                            type="checkbox" 
+                                name="all_selected" 
+                                checked={ this.state.cart.every( item => item.isChecked ) }
+                                onChange={ ( event ) => this.switchAllSelected( event ) }
+                            />
                             <span>全选</span> 
                             <span>
-                                合计：
-                                <strong>
-                                    {
-                                        this.state.cart.filter( (v, i) => {
-                                                console.log( v );
-                                             return v.isCheck
-                                        })
-                                    } 
+                                合计：￥
+                                <strong>    
+                                    { this.state.totalPrice }
                                 </strong>
                             </span>
                         </div>  

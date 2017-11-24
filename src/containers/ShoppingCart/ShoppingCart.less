@@ -2,7 +2,7 @@
     background-color: rgb(235, 233, 233);
 
     .shop-cart {
-
+        padding-bottom: 50px;
         .cart-item {
             background-color: #fff;
             width: 100%;
@@ -48,27 +48,25 @@
                         font-size: 0.2rem;
                     }
                     .counter { 
-                        margin-top: 3px;
+                        margin-top: 8px;
                         button {
-                            width: 20px;
-                            height: 20px;
+                            width: 30px;
+                            height: 30px;
                             background-color: rgb(228, 228, 228);
-                           
                         }
                         input {
-                            width: 20px;
-                            height: 20px;
-                            background-color: rgb(228, 228, 228);
+                            width: 28px;
+                            height: 28px;
+                            // background-color: rgb(228, 228, 228);
                             border: none;
+                            outline: 1px solid #ccc;
                             margin: 0 1px;
-                            outline: njo;
-                            outline: none;
                             text-align: center;
                         }
                     }
                     .delete-icon {
-                        font-size: 0.2rem;
-                        background-color: rgb(78, 163, 163);
+                        font-size: 0.5rem;
+                        // background-color: rgb(78, 163, 163);
                         padding: 2px 8px;
                         position: absolute;
                         right: 10px;
@@ -87,6 +85,7 @@
                 span {
                     strong {
                         font-weight: normal;
+                        color: red;
                     }
                 }
                 span:nth-child(2) {
@@ -119,6 +118,16 @@
             font-size: 0.28rem;
 
             padding-left: 10px;
+            input {
+                margin: 0 5px;
+            }
+            span {
+                margin: 0 5px;
+
+                strong {
+                    color: red;
+                }
+            }
         }
         .pay-btn {
             width: 40%;
