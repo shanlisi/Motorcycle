@@ -15,22 +15,18 @@ export default class Mine extends Component {
 
     handleOut = () => {
        myGet('/logout').then(res=>{
-           console.log(res);
-       })
-        //cookie.remove('USER')
+       });
+        cookie.remove('USER')
     };
     handleTack = () => {
         let userID = JSON.parse(cookie.get('USER')).userId;
         if (userID) {
             myGet('/user/' + userID).then(res => {
                 if (res.code == 0 && res.login) {
-                        console.log("=====",res.userInfo);
                         this.setState({userInfo: res.userInfo});
-                        console.log(res.userInfo);
-                        console.log(this.state.userInfo);
+
                 }else {
                     window.location.href = 'http://localhost:8555/#/login';
-                    alert(res.error);
                 }
             });
         } else {
