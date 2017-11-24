@@ -14,8 +14,8 @@ export  default  function getScroll(dom,callback,is) {
             if(timer)clearInterval(timer);
             timer = window.setTimeout(function () {
                 currenrScroll=dom.scrollTop;
-                childrenHeight=dom.firstElementChild.scrollHeight;
-                if(parseFloat(contClientHeight)+currenrScroll+30>=parseFloat(childrenHeight)){
+                childrenHeight=dom.scrollHeight;
+                if(parseFloat(contClientHeight)+currenrScroll+30 >= parseFloat(childrenHeight)){
                     childrenHeight=dom.firstElementChild.scrollHeight;
                     callback();
                 }
