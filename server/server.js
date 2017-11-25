@@ -287,7 +287,7 @@ app.put('/user', function (req, res) {
         data.forEach((item, index) => {
             if (item.userId == reqBody.userId) {
                 let userInfo = data.splice(index, 1)[0];
-                userInfo = {...userInfo, ...reqBody,password:null};
+                userInfo = {...userInfo, ...reqBody};
                 data.splice(index, 0, userInfo);
                 modifyUserInfo(data, function () {
                     res.json({code: 0, login: true, userInfo})
