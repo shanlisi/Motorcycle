@@ -57,7 +57,7 @@ export default class ShoppingCart extends Component {
         this.changeProductNumber = this.changeProductNumber.bind( this );
     }
 
-    componentDidMount () {
+    componentWillMount () {
         /**
          * 从 cookie 中获取用户登录信息 
          * 或者 cookie 中不存在 USER 字段 表明用户没有注册或者登录过
@@ -76,13 +76,12 @@ export default class ShoppingCart extends Component {
         myGet( "/user/" + userId ).then( ( response ) => {
             if ( response.code === 0 && !response.login  ) {
                 this.setState( { isAuth: false } );
-                return;
             }
-        })
+        });
 
 
         // 将用户 id 保存至 state 
-        this.setState( { userInfo: { userId: JSON.parse( cookie.get( 'USER' ) ).userId } } )
+        this.setState( { userInfo: { userId: JSON.parse( cookie.get( 'USER' ) ).userId } } );
 
         
         /**
@@ -91,13 +90,12 @@ export default class ShoppingCart extends Component {
          */
         myGet( "/shoppingCart/" + userId ).then( ( response ) => {
 
-            console.log( response );
 
             if ( response.code === 0 && response.login ) {
                 let initCart = response.cartInfo.map( ( item, index ) => {
                     item.isChecked = false;
                     return item;
-                })
+                });
                 this.setState( { cart: initCart } );
             } else {
                 this.setState( { isAuth: false } );
@@ -212,7 +210,7 @@ export default class ShoppingCart extends Component {
 
         productsHasSelected.forEach( ( item ) => {
             totalPrice += ( item.num * item.price )
-        })
+        });
         return totalPrice;
     }
 
@@ -222,9 +220,7 @@ export default class ShoppingCart extends Component {
                  
                 <MyHeader showBack={true} title="购物车"/>
 
-                { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车" /> : null }
-
-                { this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
+                { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车"  isNotLogin={true} push={this.props.history.push}/> : this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
 
                 <div className='my-container shop-cart-container'>
                     {

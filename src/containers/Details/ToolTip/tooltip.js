@@ -16,8 +16,12 @@ class ToolTip extends Component {
     }
     componentDidMount () {
         this.timer = setTimeout( () => {
-            this.setState( { isShow: false } )
-        }, 1500);
+            this.setState( { isShow: false } );
+            if(this.props.isNotLogin===true){
+                this.props.push('/login')
+            }
+
+        }, 2000);
     }
     render () {
         return (

@@ -22,16 +22,14 @@ export default class Login extends Component{
             password:password.value
         }).then(res=>{
             if(res.code==0){
-                window.location.href='http://localhost:8555/#/';
+                /*window.location.href='http://localhost:8555/#/';*/
+                this.props.history.goBack();
                 cookie.set("USER",JSON.stringify(res));
             }else if(res.code==1){
                 alert(res.error);
             }
-            console.log(res);
         });
 
-        console.log(username.value, password.value);
-        console.log(cookie.get("USER"));
     };
     render(){
         return (
@@ -48,7 +46,7 @@ export default class Login extends Component{
                         </div>
                         <div className="input">
                             <span>密码：</span>
-                            <input type="text" placeholder="请输入密码" id="password"/>
+                            <input type="password" placeholder="请输入密码" id="password"/>
                         </div>
                         <div className="button" onClick={this.logon}>登录</div>
                         <div className="signup">

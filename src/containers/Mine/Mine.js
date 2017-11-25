@@ -14,7 +14,12 @@ export default class Mine extends Component {
             userInfo: {}
         };
     }
-
+    componentWillMount(){
+        if(!JSON.parse(cookie.get('USER'))){
+            this.props.history.push('login');
+            return;
+        }
+    }
     handleOut = () => {
         myGet('/logout').then(res=>{
             if(res.code==1){alert('退出失败，请重试')}

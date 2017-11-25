@@ -1,1 +1,1 @@
-[{"userId":1,"userName":"shanlisi1994","password":19940319,"phone":"15810200728","sex":"man","mail":"shanlisi1994@163.com","desc":"摩托商城!!!~~~~~~~~~~~~~~~","address":"12","orderForms":[],"cartInfo":[{"productId":"3","name":"豪爵铃木GW250","price":23880,"num":3,"typeModel":"透明红","image":"http://localhost:3000/public/images/productList/list-id-3.jpg"}],"isSex":true}]
+[{"userId":1,"userName":"shanlisi1994","password":19940319,"phone":"15810200728","sex":"man","mail":"shanlisi1994@163.com","desc":"摩托商城!!!~~~~~~~~~~~~~~~","address":[],"orderForms":[],"cartInfo":[],"isSex":true}]
