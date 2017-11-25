@@ -32,6 +32,7 @@ export default class ShoppingCart extends Component {
             // 购物车
             /**
              *  name: "豪爵铃木GW250"     商品名称
+             *  image: ""                商品图片
              *  num: 10                  商品购买数量
              *  price: 23880             商品价格 
              *  productId: "3"           商品 id
@@ -255,7 +256,7 @@ export default class ShoppingCart extends Component {
                                                 </div>
 
                                                 <div className="item-img">
-                                                    <img src="" alt="这是商品图片 但是暂时没有 以后坑定会有" />
+                                                    <img src={ item.image } alt="这是商品图片 但是暂时没有 以后坑定会有" title={ item.name } />
                                                 </div>
 
                                                 <div className="item-body-content">
