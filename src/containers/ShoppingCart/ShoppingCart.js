@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 
 import './ShoppingCart.less'
 import cookie from "./../App/cookie"
@@ -200,17 +200,6 @@ export default class ShoppingCart extends Component {
         let totalPrice = this.computedTotalPrice( _newCart );
         this.setState( { cart: _newCart, totalPrice: totalPrice } );
     }
-
-    handleClick=(index)=>{
-        let checkAry=this.state.checkAry;
-        checkAry[index]= !checkAry[index];
-         this.setState({
-             ...this.state,
-             checkAry
-         })
-    };
-
-
 
     // 计算总价
     computedTotalPrice ( cart ) {
