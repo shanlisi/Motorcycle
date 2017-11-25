@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Motorcycle</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_480489_hdgjc21rrflp7gb9.css">
+    <script>
+        ~function () {
+            window.addEventListener('resize', computed, false);
+            computed();
+            function computed() {
+                let deviceW = document.documentElement.clientWidth;
+                if (deviceW > 750) return;
+                document.documentElement.style.fontSize = deviceW / 750 * 100 + 'px';
+            }
+        }();
+    </script>
+<link rel="shortcut icon" href="favicon.ico"></head>
+<body>
+<div id="root">
+</div>
+<script type="text/javascript" src="bundle.js"></script></body>
+</html>
