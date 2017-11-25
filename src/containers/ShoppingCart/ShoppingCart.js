@@ -234,6 +234,8 @@ export default class ShoppingCart extends Component {
 
                 { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车" /> : null }
 
+                { this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
+
                 <div className='my-container shop-cart-container'>
                     {
                         <ul className="shop-cart">
