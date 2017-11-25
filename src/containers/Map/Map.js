@@ -22,10 +22,7 @@ export default class Map extends Component {
         if (userID) {
             myGet('/user/' + userID).then(res => {
                 if (res.code == 0 && res.login) {
-                    console.log("=====",res.userInfo);
                     this.setState({userInfo: res.userInfo});
-                    console.log(res.userInfo);
-                    console.log(this.state.userInfo);
                 }else {
                     window.location.href = 'http://localhost:8555/#/login';
                     alert(res.error);
@@ -48,7 +45,6 @@ export default class Map extends Component {
             userName: info.userName,
             address: info.address
         });
-        console.log(this.props);
     }
 
     render() {

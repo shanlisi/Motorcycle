@@ -4,7 +4,6 @@ import './List.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {myGet} from '../../api/index';
-import getScroll from '../../utils1'
 export default class List extends Component {
     constructor() {
         super();
@@ -14,7 +13,9 @@ export default class List extends Component {
             id: '',
             offset:0,
             limit:6,
-            hasMore:true
+            hasMore:true,
+            loading:false,
+            searching:false
         }
     }
 
@@ -81,22 +82,23 @@ export default class List extends Component {
     };
 
     change = () => {
+            this.setState({loading:true});
             myGet('/productList/getList?offset=' + this.state.offset + '&limit=' + this.state.limit).then(res => {
                 if(res.code==1){
-                    getScroll(this.div,this.change(),false);
+                    this.setState({loading:false});
                     return;
                 }
-                this.setState({...this.state, productList: [...this.state.productList,...res.productList],offset:this.state.offset+this.state.limit,hasMore:res.hasMore});
+                this.setState({productList: [...this.state.productList,...res.productList],offset:this.state.offset+this.state.limit,hasMore:res.hasMore,loading:false});
                 }
             );
     };
 
     componentDidMount() {
         this.change();
-        getScroll(this.div, this.change,true);
     };
 
     search = () => {
+        this.setState({searching:true});
         myGet('/productList/filterList?value=' + ipt.value).then(res => {
             if (res.code == 1) {
                 this.setState({...this.state, productList: []});
@@ -105,7 +107,25 @@ export default class List extends Component {
             }
         })
     };
+//上拉加载
+    handleScroll = (event) => {
+        if(!this.state.hasMore ||this.state.searching){return}
+        if (this.state.timerId) clearTimeout(this.state.timerId);
+        let that = event.target;
+        this.state.timerId = setTimeout(() => {
 
+            let scrollTop = that.scrollTop;//向上卷去的高度
+
+            let clientHeight = that.clientHeight;//可视区高度
+
+            let scrollHeight = that.scrollHeight;//内容高度
+
+
+            if (scrollTop + clientHeight + 10 >= scrollHeight) {
+                this.change()
+            }
+        }, 100)
+    };
     render() {
         //升序
         return (
@@ -116,8 +136,11 @@ export default class List extends Component {
                         <div className='title'>
                             <input type="text" placeholder='搜索商品' id='ipt' onChange={
                                 () => {
-                                    ipt.value.length == 0;
-                                    this.change();
+                                    if(ipt.value.length == 0){
+                                        this.setState({searching:false});
+                                        this.change();
+                                    }
+
                                 }
                             }/>
                             <span className='search-span iconfont icon-search'
@@ -150,7 +173,7 @@ export default class List extends Component {
                                     </CSSTransition> : null}
                             </TransitionGroup>
                         </div>
-                        <div className='all-product' ref={(div) => this.div = div}>
+                        <div className='all-product' onScroll={this.handleScroll}>
                             <ul className='main clearfix'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index} className="mainList">
@@ -159,10 +182,13 @@ export default class List extends Component {
                                         <p className='product-name'>{item.title}</p>
                                         <p className='price'>市场均价: ￥{item.price}</p>
                                     </li>
-                                )) : <li className='no-fond'>没有搜索到内容</li>
+                                )) : (this.state.loading?null:<li className='no-fond'>木有内容~</li>)
                                 }
                             </ul>
                             {this.state.hasMore?null:<p style={{textAlign:'center',lineHeight:'.75rem'}}>别扯了，我是有底线的~~~</p>}
+                            {this.state.loading ? <div style={{position: 'relative', height: '1rem'}}>
+                                <div className="loader">Loading...</div>
+                            </div> : null}
                         </div>
 
                     </div>

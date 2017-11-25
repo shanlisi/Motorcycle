@@ -57,7 +57,7 @@ app.get('/home/articleList', function (req, res) {
     }
 
     let list = articleList.slice(offset, offset + limit);
-    res.json({code: 0, articleList: list, hasMore: hsaMore})
+    setTimeout(()=>{res.json({code: 0, articleList: list, hasMore: hsaMore})},1500)
 });
 
 //商品列表
@@ -74,7 +74,7 @@ app.get('/productList/getList', function (req, res) {
         hsaMore = false;
     }
     let list = productList.slice(offset, offset + limit);
-    res.json({code: 0, productList: list, hasMore: hsaMore})
+    setTimeout(()=>{res.json({code: 0, productList: list, hasMore: hsaMore})},1500)
 });
 //筛选商品列表
 app.get('/productList/filterList', function (req, res) {
@@ -287,7 +287,7 @@ app.put('/user', function (req, res) {
         data.forEach((item, index) => {
             if (item.userId == reqBody.userId) {
                 let userInfo = data.splice(index, 1)[0];
-                userInfo = {...userInfo, ...reqBody};
+                userInfo = {...userInfo, ...reqBody,password:null};
                 data.splice(index, 0, userInfo);
                 modifyUserInfo(data, function () {
                     res.json({code: 0, login: true, userInfo})

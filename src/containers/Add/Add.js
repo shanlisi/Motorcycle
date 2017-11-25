@@ -8,7 +8,7 @@ export default class Add extends Component {
         super();
         this.state={
             userId:'',
-            address: ''
+            address:[]
         }
     }
 
@@ -97,7 +97,7 @@ export default class Add extends Component {
                         </div>
                     </div>
                     <div className="add-btn">
-                        <Link to="/Mine">
+                        <Link to="/Map">
                             <button onClick={this.handleClick}>
                                 完成
                             </button>

@@ -16,6 +16,7 @@ export default function downRefresh(element, callback) {
             let pageY = e.targetTouches[0].pageY;
             if (pageY > startY) {//新的点的纵坐标大于起始点的纵坐标表示下拉
                 distance = pageY - startY;
+                if(distance>180)return;
                 element.style.top = initTop + distance + 'px';
             } else {//如果上拉的话不处理，移除监听
                 element.removeEventListener('touchmove', touchMove);
@@ -26,18 +27,19 @@ export default function downRefresh(element, callback) {
         function touchEnd(e) {
             element.removeEventListener('touchmove', touchMove);
             element.removeEventListener('touchend', touchEnd);
-            console.log(element.offsetTop);
+            let n=0;
             let timerId = setInterval(function () {
                 //如果说当前的距离已经小于等于初始的值了
                 if (element.offsetTop <= initTop) {
                     element.style.top = initTop+'px';
                     clearInterval(timerId);
                 } else {
-                    element.style.top = element.offsetTop - 5 + 'px';
+                    n++;
+                    if(n>30){element.style.top = element.offsetTop -8 + 'px';}
+
                 }
-            }, 1);
+            }, 17);
             if(distance>50){
-                console.log(callback);
                 callback();
             }
         }

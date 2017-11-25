@@ -8,6 +8,7 @@ export default class Slider extends Component{
         super();
         this.state={
             swipers:[],
+            startSlide :2
         };
     }
     componentDidMount(){
@@ -25,6 +26,8 @@ export default class Slider extends Component{
         let swipeOptions={
             continuous:true,
             auto:1000,
+            speed:600,
+            startSlide :this.state.startSlide ,
             callback:(index)=>{
                 this.setState({index})
             }

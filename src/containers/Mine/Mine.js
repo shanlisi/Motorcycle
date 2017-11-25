@@ -28,22 +28,25 @@ export default class Mine extends Component {
             myGet('/user/' + userID).then(res => {
                 if (res.code == 0 && res.login) {
                     this.setState({userInfo: res.userInfo});
-
                 } else {
-                    window.location.href = 'http://localhost:8555/#/login';
+                    this.props.history.push('/login')
                 }
             });
         } else {
-            window.location.href = 'http://localhost:8555/#/login';
+            this.props.history.push('/login')
         }
     };
 
     componentDidMount() {
         this.handleTack();
     }
-
+    changeUserInfo=(userInfo)=>{
+        console.log('函數',userInfo);
+        this.setState({userInfo})
+    };
     // [{"name":"libai","phone":"15010015294","dizhi":"北京昌平区回龙观东大街3号楼珠峰培训3楼快递存放处"}]
     render() {
+        console.log('-------render',this.state);
         return (
             <div className="mine-bg">
                 <MyHeader showBack={true} title="个人中心"/>
@@ -100,7 +103,7 @@ export default class Mine extends Component {
 
                             <Link to={{
                                 pathname: `/profile`,
-                                state: 'hello',
+                                changeUserInfo: this.changeUserInfo,
                                 params: {userinfo: this.state.userInfo}
                             }} onClick={this.handleTack}>
                                 <i className="iconfont icon-ziliao"></i>

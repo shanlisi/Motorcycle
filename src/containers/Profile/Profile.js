@@ -8,34 +8,29 @@ export default class Profile extends Component {
         super();
         this.state={
             userId:'',
-            userName:'',
-            phone:'',
-            mail:'',
-            desc:'',
-            isSex:true,
-            sex:'man',
+                userName:'',
+                phone:'',
+                mail:'',
+                desc:'',
+                isSex:true,
+                sex:'man'
         }
     }
 
     handleClick=()=>{
         myPut('/user',{
-            userId:this.state.userId,
-            userName:this.state.userName,
-            phone:this.state.phone,
-            sex:this.state.sex,
-            mail:this.state.mail,
-            desc:this.state.desc,
+            ...this.state
         }).then(result=>{
             if(result.code==0){
-                console.log('修改成功');
+                this.props.location.changeUserInfo(result.userInfo);
+                this.props.history.push('/mine')
+
             }else{
-                console.log('修改失败');
+                alert('修改失败');
             }
-            console.log(result);
         })
     };
     click=(e)=>{
-        console.log(e.target.id);
         if(e.target.id=="man"){
             this.setState({
                 sex:"man",
@@ -48,24 +43,14 @@ export default class Profile extends Component {
             })
         }
     };
-    componentDidMount(){
+    componentWillMount(){
         let info={};
-        let handleTack=null;
         if(this.props.location.params){
             info=this.props.location.params.userinfo;
-            handleTack=this.props.location.params.handleTack;
         }else{
             return;
         }
-        this.setState({
-            userName:info.userName,
-            phone:info.phone,
-            mail:info.mail,
-            desc:info.desc,
-            sex:info.sex,
-            userId:info.userId
-        });
-        console.log(this.props);
+        this.setState({...info});
     }
 
     render() {
@@ -113,11 +98,9 @@ export default class Profile extends Component {
                         </div>
                     </div>
                     <div className="profile-btn">
-                        <Link to="/mine">
                             <button onClick={this.handleClick}>
                                 保存
                             </button>
-                        </Link>
                     </div>
 
                 </div>

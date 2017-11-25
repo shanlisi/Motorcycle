@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.less';
 // import {myGet} from '../../../api/index';
-import Lazyload from 'react-lazyload';
+//import Lazyload from 'react-lazyload';
 
 export default class ArticleList extends Component {
     // constructor() {
