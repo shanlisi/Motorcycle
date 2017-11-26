@@ -17,8 +17,10 @@ export default class Mine extends Component {
     componentWillMount(){
         if(!JSON.parse(cookie.get('USER'))){
             this.props.history.push('login');
-            return;
+        }else{
+            this.handleTack();
         }
+
     }
     handleOut = () => {
         myGet('/logout').then(res=>{
@@ -42,16 +44,10 @@ export default class Mine extends Component {
         }
     };
 
-    componentDidMount() {
-        this.handleTack();
-    }
     changeUserInfo=(userInfo)=>{
-        console.log('函數',userInfo);
         this.setState({userInfo})
     };
-    // [{"name":"libai","phone":"15010015294","dizhi":"北京昌平区回龙观东大街3号楼珠峰培训3楼快递存放处"}]
     render() {
-        console.log('-------render',this.state);
         return (
             <div className="mine-bg">
                 <MyHeader showBack={true} title="个人中心"/>
@@ -96,8 +92,7 @@ export default class Mine extends Component {
                         <li>
                             <Link to={{
                                 pathname: `/map`,
-                                state: 'hello',
-                                params: {userinfo: this.state.userInfo}
+                                userInfo: this.state.userInfo
                             }} onClick={this.handleTack}>
                                 <i className="iconfont icon-dizhi"></i>
                                 <span>收货地址</span>

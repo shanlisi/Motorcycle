@@ -2,49 +2,55 @@ import React, {Component} from 'react';
 import './Map.less'
 import {Link} from 'react-router-dom'
 import MyHeader from "../../components/MyHeader/MyHeader";
-import cookie from  '../App/cookie'
+import cookie from '../App/cookie'
 import {myGet} from '../../api/index'
+
 export default class Map extends Component {
     constructor() {
         super();
-        // this.state = {
-        //     userId: '',
-        //     address: ''
-        // }
         this.state = {
-            user: JSON.parse(cookie.get('USER')),
-            userInfo: {}
+
+            userInfo: {
+                userId: '',
+                userName: '',
+                phone: '',
+                sex: '',
+                mail: '',
+                desc: '',
+                address: [],
+                orderForms: [],
+            }
+
         };
     }
+    handleAddress=(address)=>{
+        this.setState({
+            userInfo:{...this.state.userInfo,address}
+        })
+    };
 
     handleTack = () => {
-        let userID = JSON.parse(cookie.get('USER')).userId;
-        if (userID) {
-            myGet('/user/' + userID).then(res => {
+        let userId = JSON.parse( cookie.get( "USER" ) ).userId;
+        if (userId) {
+            myGet('/user/' + userId).then(res => {
                 if (res.code == 0 && res.login) {
                     this.setState({userInfo: res.userInfo});
-                }else {
-                    window.location.href = 'http://localhost:8555/#/login';
-                    alert(res.error);
+                } else {
+                   this.props.history.push('/mine')
                 }
             });
         } else {
-            window.location.href = 'http://localhost:8555/#/login';
+            this.props.history.push('/login')
         }
     };
 
+
     componentDidMount() {
-        this. handleTack();
-        let info = {};
-        if (this.props.location.params) {
-            info = this.props.location.params.userinfo;
+        if (this.props.userInfo) {
+            this.setState({userInfo: this.props.userInfo})
         } else {
-            return;
+            this.handleTack();
         }
-        this.setState({
-            userName: info.userName,
-            address: info.address
-        });
     }
 
     render() {
@@ -53,18 +59,24 @@ export default class Map extends Component {
                 <MyHeader showBack={true} title="收获地址"/>
                 <div className='my-container'>
                     <div className="map-add">
-                        {this.state.address && this.state.address.length !== 0 ?
+                        {this.state.userInfo.address.length > 0 ?
                             <div className="map-ind">
                                 <div className="map-ind-t">
-                                    <span>{this.state.address[0]}</span>
-                                    <span>{this.state.address[1]}</span>
+                                    {this.state.userInfo.address.map((item,index )=> (
+                                        <div key={index}>
+                                            <p>收件人：{item.man}</p>
+                                            <p>联系电话：{item.phone}</p>
+                                            <p>收获地址：{item.location}</p>
+                                        </div>
+
+                                    ))}
                                 </div>
-                                <div className="map-ind-b">{this.state.address[2]}</div>
                                 <Link to={{
                                     pathname: `/add`,
-                                    state: 'hello',
-                                    params: {useradd: this.state.userInfo}
-                                }} onClick={this.handleTack}>
+                                    params:'',
+                                    state:{userInfo: this.state.userInfo,
+                                        handleAddress:this.handleAddress}
+                                }}>
                                     <div className="map-ind-T">修改地址</div>
                                 </Link>
                             </div>
@@ -74,9 +86,9 @@ export default class Map extends Component {
                                 <p className="map-ind-t">暂无相关内容</p>
                                 <Link to={{
                                     pathname: `/add`,
-                                    state: 'hello',
-                                    params: {useradd: this.state.userInfo}
-                                }} onClick={this.handleTack}>
+                                    params:'',
+                                    state:{handleAddress:this.handleAddress}
+                                }}>
                                     <div className="map-ind-b">添加新地址</div>
                                 </Link>
                             </div>

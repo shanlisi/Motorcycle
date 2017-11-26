@@ -74,7 +74,7 @@ class Details extends Component {
             console.log( "您还没有登录，请先登录" );
 
             // 用户认证为 false 表明用户没有登录
-            this.setState( { isAuth: false } )
+            this.setState( { isAuth: false } );
             return;
         }
 

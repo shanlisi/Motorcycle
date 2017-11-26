@@ -225,8 +225,8 @@
         sex:'性别',[String]
         mail:'邮箱',[String]
         desc:'简介',[String]
-        address:'地址',[String]
-        orderForms:'订单',[String]
+        address:'地址',[Array]
+        orderForms:'订单',[Array]
     }
 }
 ```

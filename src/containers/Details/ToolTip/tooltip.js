@@ -23,6 +23,9 @@ class ToolTip extends Component {
 
         }, 2000);
     }
+    componentWillUnmount(){
+        clearTimeout(this.timer)
+    }
     render () {
         return (
             <div className={ this.state.isShow ? "tool-tip-on" : "tool-tip-off" }>
