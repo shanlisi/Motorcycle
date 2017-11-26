@@ -220,7 +220,7 @@ export default class ShoppingCart extends Component {
                  
                 <MyHeader showBack={true} title="购物车"/>
 
-                { !this.state.isAuth ? <ToolTip msg="登陆后可以查看购物车"  isNotLogin={true} push={this.props.history.push}/> : this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
+                { !this.state.isAuth ? <ToolTip msg="未登录~1s后自动跳转"  isNotLogin={true} push={this.props.history.push}/> : this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
 
                 <div className='my-container shop-cart-container'>
                     {

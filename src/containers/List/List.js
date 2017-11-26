@@ -81,16 +81,30 @@ export default class List extends Component {
         this.setState({productList: this.state.productList});
     };
 
-    change = () => {
+    change = (restart) => {
             this.setState({loading:true});
-            myGet('/productList/getList?offset=' + this.state.offset + '&limit=' + this.state.limit).then(res => {
-                if(res.code==1){
-                    this.setState({loading:false});
-                    return;
-                }
-                this.setState({productList: [...this.state.productList,...res.productList],offset:this.state.offset+this.state.limit,hasMore:res.hasMore,loading:false});
-                }
-            );
+            if(restart){
+                myGet('/productList/getList?offset=0&limit=' + this.state.limit).then(res => {
+                        if(res.code==1){
+                            this.setState({loading:false});
+                            return;
+                        }
+                            this.setState({productList: res.productList,offset:this.state.limit,hasMore:res.hasMore,loading:false});
+                    }
+                );
+            }else{
+                myGet('/productList/getList?offset=' + this.state.offset + '&limit=' + this.state.limit).then(res => {
+                        if(res.code==1) {
+                            this.setState({loading: false});
+                            return;
+                        }
+                            this.setState({productList: [...this.state.productList,...res.productList],offset:this.state.offset+this.state.limit,hasMore:res.hasMore,loading:false});
+
+
+                    }
+                );
+            }
+
     };
 
     componentDidMount() {
@@ -135,10 +149,10 @@ export default class List extends Component {
                     <div className='list'>
                         <div className='title'>
                             <input type="text" placeholder='搜索商品' id='ipt' onChange={
-                                () => {
-                                    if(ipt.value.length == 0){
-                                        this.setState({searching:false});
-                                        this.change();
+                                (e) => {
+                                    if(e.target.value.length == 0){
+                                        this.setState({searching:false,productList: []});
+                                        this.change(true);
                                     }
 
                                 }
