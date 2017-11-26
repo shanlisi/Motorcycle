@@ -153,9 +153,9 @@ export default class SignUp extends Component{
                             <div className="photo" id="photo" onClick={this.photo} >{this.state.num}</div>
                         </div>
                         <div className="submit" onClick={this.summit}>注册</div>
-                        <p>牛摩网会遵守<a href="https://render.alipay.com/p/f/fd-iztow1fi/index.html">《用户服务协议》</a></p>
+                        <p>Motorcycle会遵守<a href="https://render.alipay.com/p/f/fd-iztow1fi/index.html">《用户服务协议》</a></p>
                         <p>保证您的信息安全</p>
-                        <p>已拥有牛摩账号？<Link to="/login">直接登录</Link></p>
+                        <p>已拥有Motorcycle账号？<Link to="/login">直接登录</Link></p>
                     </div>
                 </div>
             </div>

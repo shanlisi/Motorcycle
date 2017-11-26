@@ -35,7 +35,7 @@ export default function downRefresh(element, callback) {
                     clearInterval(timerId);
                 } else {
                     n++;
-                    if(n>30){element.style.top = element.offsetTop -8 + 'px';}
+                    if(n>50){element.style.top = element.offsetTop -8 + 'px';}
 
                 }
             }, 17);

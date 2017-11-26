@@ -117,13 +117,14 @@ export default class List extends Component {
             if (res.code == 1) {
                 this.setState({...this.state, productList: []});
             } else {
+                this.wraper.scrollTop=0;
                 this.setState({...this.state, productList: res.productList});
             }
         })
     };
 //上拉加载
     handleScroll = (event) => {
-        if(!this.state.hasMore ||this.state.searching){return}
+        if(!this.state.hasMore ||this.state.searching ||this.state.loading){return}
         if (this.state.timerId) clearTimeout(this.state.timerId);
         let that = event.target;
         this.state.timerId = setTimeout(() => {
@@ -151,7 +152,7 @@ export default class List extends Component {
                             <input type="text" placeholder='搜索商品' id='ipt' onChange={
                                 (e) => {
                                     if(e.target.value.length == 0){
-                                        this.setState({searching:false,productList: []});
+                                        this.setState({searching:false,productList: [],hasMore:true});
                                         this.change(true);
                                     }
 
@@ -187,7 +188,7 @@ export default class List extends Component {
                                     </CSSTransition> : null}
                             </TransitionGroup>
                         </div>
-                        <div className='all-product' onScroll={this.handleScroll}>
+                        <div className='all-product' onScroll={this.handleScroll} ref={i=>this.wraper=i}>
                             <ul className='main clearfix'>
                                 {this.state.productList.length > 0 ? this.state.productList.map((item, index) => (
                                     <li key={index} className="mainList">

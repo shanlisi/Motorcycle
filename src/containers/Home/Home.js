@@ -77,6 +77,11 @@ export default class Home extends Component {
     //上拉加载
     handleScroll = (event) => {
         if (this.state.timerId) clearTimeout(this.state.timerId);
+        console.log(!this.state.hasMore);
+        console.log(this.state.loading);
+        if (!this.state.hasMore || this.state.loading) {
+            return
+        }
         let that = event.target;
         this.state.timerId = setTimeout(() => {
 
