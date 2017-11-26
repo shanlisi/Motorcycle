@@ -11,13 +11,13 @@ import { myGet, myDelete, myPost, myPut } from '../../api/index';
 
 
 /**
- * 进入用户购物车页面 
+ * 进入用户购物车页面
  * 1 查看用户是否登录
  *      用户已经登录 获取用户的购物车
  *      用户没有登录 页面跳转至 login 页面
  * 2 获取用户购物车  将用户的购物车数据集保存到 组件的 state 中
- * 3 实现购物车中单个商品的 增 add 删 del 减 minus 
- *      以及 
+ * 3 实现购物车中单个商品的 增 add 删 del 减 minus
+ *      以及
  *      全选 allSelected 反选 invertSelected  单选 singleSelected 小计 subtotal 总计 totalPrice
  */
 export default class ShoppingCart extends Component {
@@ -34,7 +34,7 @@ export default class ShoppingCart extends Component {
              *  name: "豪爵铃木GW250"     商品名称
              *  image: ""                商品图片
              *  num: 10                  商品购买数量
-             *  price: 23880             商品价格 
+             *  price: 23880             商品价格
              *  productId: "3"           商品 id
              *  typeModel: "冰川白"       商品类型
              *  isChecked: false         商品是否被选中 默认 false 表示没有被选中
@@ -59,9 +59,9 @@ export default class ShoppingCart extends Component {
 
     componentWillMount () {
         /**
-         * 从 cookie 中获取用户登录信息 
+         * 从 cookie 中获取用户登录信息
          * 或者 cookie 中不存在 USER 字段 表明用户没有注册或者登录过
-         * 存在 USER 字段 则取出用户的 id 
+         * 存在 USER 字段 则取出用户的 id
          */
         let userId = null;
         if ( JSON.parse( cookie.get( 'USER' ) )  ) {
@@ -70,7 +70,7 @@ export default class ShoppingCart extends Component {
             this.setState( { isAuth: false } );
             return;
         }
-        
+
 
         // 检查用户是否已经登录 从 session 中检查用户的登录状态
         myGet( "/user/" + userId ).then( ( response ) => {
@@ -83,7 +83,7 @@ export default class ShoppingCart extends Component {
         // 将用户 id 保存至 state 
         this.setState( { userInfo: { userId: JSON.parse( cookie.get( 'USER' ) ).userId } } );
 
-        
+
         /**
          * 根据用户 id 获取用户购物车信息
          * 对购物车中的每一条商品添加一个属性 isChecked, 初始为 false
@@ -105,9 +105,9 @@ export default class ShoppingCart extends Component {
 
     /**
      * @description: 对商品数量执行 加 或 减 操作
-     * @param {Number} id 
-     * @param {String} type 
-     * @param {String} action 
+     * @param {Number} id
+     * @param {String} type
+     * @param {String} action
      */
     changeProductNumber ( id, type, action ) {
         let targetProduct = this.state.cart.filter( ( item ) => {
@@ -120,11 +120,11 @@ export default class ShoppingCart extends Component {
             targetProduct.num += 1;
         } else if ( action == "minus" ) {
             targetProduct.num -= 1;
-        }  
+        }
 
 
-        let changeNumData = { 
-            userId: this.state.userInfo.userId, 
+        let changeNumData = {
+            userId: this.state.userInfo.userId,
             cartInfo: {
                 productId: targetProduct.productId,
                 typeModel: targetProduct.typeModel,
@@ -136,9 +136,9 @@ export default class ShoppingCart extends Component {
             console.log( response );
             if ( response.code === 0 && response.login ) {
                 let totalPrice = this.computedTotalPrice( this.state.cart );
-                
+
                 this.setState( { cart: [ ...this.state.cart, ...targetProduct ], totalPrice: totalPrice })
-            } 
+            }
         });
     }
 
@@ -146,7 +146,7 @@ export default class ShoppingCart extends Component {
     // 删除商品
     del ( id, type ) {
 
-        // 获取要删除的商品 在 cart 数组中的数组 继而使用 splice 来删除
+        // 获取要删除的商品 在 cart 数组中的索引 继而使用 splice 来删除
         let delProductIndex = this.state.cart.findIndex( ( item, index ) => {
             return item.productId == id && item.typeModel == type;
         });
@@ -156,14 +156,14 @@ export default class ShoppingCart extends Component {
         let delProduct = _newCart[delProductIndex];
 
         let delData = { userId: this.state.userInfo.userId, cartInfo: { productId: delProduct.productId, typeModel: delProduct.typeModel } };
-        
+
         myDelete( "/shoppingCart", delData ).then( ( response ) => {
 
             if ( response.code === 0 && response.login ) {
                 _newCart.splice( delProductIndex, 1 );
-                
+
                 let totalPrice = this.computedTotalPrice( _newCart );
-                
+
                 this.setState( { cart: _newCart, totalPrice: totalPrice } )
             }
         });
@@ -180,21 +180,21 @@ export default class ShoppingCart extends Component {
             }
             return item;
         });
-         
+
         let totalPrice = this.computedTotalPrice( _newCart );
         this.setState( { cart: _newCart, totalPrice: totalPrice } );
     }
-     
+
 
     // 切换全选 和 全不选
     switchAllSelected ( event ) {
-        
+
         let _cart = this.state.cart;
         let _newCart = _cart.map( ( item, index ) => {
             item.isChecked = event.target.checked;
             return item;
         });
-        
+
         let totalPrice = this.computedTotalPrice( _newCart );
         this.setState( { cart: _newCart, totalPrice: totalPrice } );
     }
@@ -214,86 +214,108 @@ export default class ShoppingCart extends Component {
         return totalPrice;
     }
 
-    render(){
-        return (
-            <div>
-                 
-                <MyHeader showBack={true} title="购物车"/>
+    render () {
 
-                { !this.state.isAuth ? <ToolTip msg="未登录~1s后自动跳转"  isNotLogin={true} push={this.props.history.push}/> : this.state.cart.length == 0 ? <ToolTip msg="购物车是空的 -_-" /> : null }
+        // 未登录
+        if ( !this.state.isAuth  ) {
+            return (
+                <div>
+                    <MyHeader showBack={ true } title="购物车"/>
+                    <ToolTip msg="未登录~1s后自动跳转" redirectTo={ !this.state.isAuth ? "/login" : null } />
+                </div>
+            )
+        }
 
-                <div className='my-container shop-cart-container'>
-                    {
-                        <ul className="shop-cart">
-                            {
-                                this.state.cart.map( ( item, index ) => {
-                                    return (
-                                        <li className="cart-item" key={ index }>
-                                            <h4 className="item-name"> 牛魔王官方旗舰店 </h4>
-                                            <div className="item-body">
-                                                <div className="selected">
+        // 购物车为空
+        else if ( this.state.cart.length == 0 ) {
+            return (
+                <div>
+                    <MyHeader showBack={ true } title="购物车"/>
+                    <ToolTip msg="购物车是空的 -_-" />
+                </div>
+            )
+        }
 
-                                                    <input type="checkbox" 
-                                                        onChange={ () => this.changeChecked( item.productId, item.typeModel, index ) } 
-                                                        checked={ item.isChecked }
-                                                    />
+        // 购物车不为空
+        else {
+            return (
+                <div>
+                    <MyHeader showBack={true} title="购物车"/>
 
-                                                </div>
+                    <div className='my-container shop-cart-container'>
+                        {
+                            <ul className="shop-cart">
+                                {
+                                    this.state.cart.map( ( item, index ) => {
+                                        return (
+                                            <li className="cart-item" key={ index }>
+                                                <h4 className="item-name"> 牛魔王官方旗舰店 </h4>
+                                                <div className="item-body">
+                                                    <div className="selected">
 
-                                                <div className="item-img">
-                                                    <img src={ item.image } alt="这是商品图片 但是暂时没有 以后坑定会有" title={ item.name } />
-                                                </div>
+                                                        <input type="checkbox"
+                                                               onChange={ () => this.changeChecked( item.productId, item.typeModel, index ) }
+                                                               checked={ item.isChecked }
+                                                        />
 
-                                                <div className="item-body-content">
-                                                    <p> { item.name } </p>
-                                                    <p className="type"> { item.typeModel } </p>
-                                                    <div className="counter">
-                                                        <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "minus" ) }>-</button>
-                                                        <input type="text" value={ item.num } onChange={ () => {} }/>
-                                                        <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "add" ) }>+</button>
                                                     </div>
 
-                                                    <span 
-                                                        className="delete-icon iconfont icon-shanchu" 
-                                                        onClick={ () => this.del( item.productId, item.typeModel ) }
-                                                    >
-                                                         
-                                                    </span>
+                                                    <div className="item-img">
+                                                        <img src={ item.image } alt="这是商品图片 但是暂时没有 以后坑定会有" title={ item.name } />
+                                                    </div>
 
+                                                    <div className="item-body-content">
+                                                        <p> { item.name } </p>
+                                                        <p className="type"> { item.typeModel } </p>
+                                                        <div className="counter">
+                                                            <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "minus" ) }>-</button>
+                                                            <input type="text" value={ item.num } onChange={ () => {} }/>
+                                                            <button onClick={ () => this.changeProductNumber( item.productId, item.typeModel, "add" ) }>+</button>
+                                                        </div>
+
+                                                        <span
+                                                            className="delete-icon iconfont icon-shanchu"
+                                                            onClick={ () => this.del( item.productId, item.typeModel ) }
+                                                        >
+
+                                                            </span>
+
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="item-footer">
-                                                <span>小计：<strong>￥ { item.price * item.num } </strong> 元</span>
-                                            </div>
-                                        </li>
-                                    )
-                                })
-                            }                        
-                        </ul>
-                    }
-                    
-                    <div className="cart-footer">
-                        <div className="footer-info">
-                            <input 
-                            type="checkbox" 
-                                name="all_selected" 
-                                checked={ this.state.cart.every( item => item.isChecked ) }
-                                onChange={ ( event ) => this.switchAllSelected( event ) }
-                            />
-                            <span>全选</span> 
-                            <span>
-                                合计：￥
-                                <strong>    
-                                    { this.state.totalPrice }
-                                </strong>
-                            </span>
-                        </div>  
-                        <div className="pay-btn">
-                            去结算
+                                                <div className="item-footer">
+                                                    <span>小计：<strong>￥ { item.price * item.num } </strong> 元</span>
+                                                </div>
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        }
+
+                        <div className="cart-footer">
+                            <div className="footer-info">
+                                <input
+                                    type="checkbox"
+                                    name="all_selected"
+                                    checked={ this.state.cart.every( item => item.isChecked ) }
+                                    onChange={ ( event ) => this.switchAllSelected( event ) }
+                                />
+                                <span>全选</span>
+                                <span>
+                                        合计：￥
+                                        <strong>
+                                            { this.state.totalPrice }
+                                        </strong>
+                                    </span>
+                            </div>
+                            <div className="pay-btn">
+                                去结算
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        }
+
     }
 } 

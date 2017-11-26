@@ -14,7 +14,6 @@ export default class LoadPicture extends Component {
     componentDidMount() {
         //获取上传按钮
         // var input1 = document.getElementById("upload");
-        console.log(this.refs.upl);
         let input1 = this.refs.upl;
 
         if (typeof FileReader === 'undefined') {

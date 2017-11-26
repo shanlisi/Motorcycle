@@ -90,36 +90,18 @@ export default class SignUp extends Component{
             let user=this.state.name,
                 pass=this.state.pass,
                 tel=this.state.tel;
-            /*$.ajax({
-                url:'http://localhost:3000/signUp',
-                type:'post',
-                dataType:'json',
-                data:{
-                    userName:user,
-                    password:pass,
-                    phone:tel,
-                },
-                success:function (result) {
-                    if(result.code==0){
-                        window.location.href='http://localhost:8555/login#/';
-                    }else{
-                       alert(result.error+'请换一个再试！');
-                    }
-                    console.log(result);
-                }
-            });*/
+
             myPost('/signUp',{
                 userName:user,
                 password:pass,
                 phone:tel
             }).then(res=>{
                 if(res.code==0){
-                    window.location.href='http://localhost:8555/#/login';
+                    this.props.history.push('/login');
                 }else{
                     alert(res.error+'请换一个再试！');
                     this.photo();
                 }
-                console.log(res);
             })
         }else{
             alert('您输入的信息不正确，请重新输入！');

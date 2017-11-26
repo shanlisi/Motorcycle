@@ -16,7 +16,7 @@ export default class Mine extends Component {
     }
     componentWillMount(){
         if(!JSON.parse(cookie.get('USER'))){
-            this.props.history.push('login');
+            this.props.history.push('/login');
         }else{
             this.handleTack();
         }
@@ -36,7 +36,7 @@ export default class Mine extends Component {
                 if (res.code == 0 && res.login) {
                     this.setState({userInfo: res.userInfo});
                 } else {
-                    this.props.history.push('/login')
+                    console.log(res.error);
                 }
             });
         } else {

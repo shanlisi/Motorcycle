@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.less'
-import  {HashRouter as Router, Route} from 'react-router-dom';
+import  {BrowserRouter as Router, Route} from 'react-router-dom';
 import Home from "../Home/Home";
 import List from "../List/List";
 import Mine from "../Mine/Mine";

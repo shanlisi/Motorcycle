@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
 
 import "./tooltip.less"
 
@@ -17,8 +18,9 @@ class ToolTip extends Component {
     componentDidMount () {
         this.timer = setTimeout( () => {
             this.setState( { isShow: false } );
-            if(this.props.isNotLogin===true){
-                this.props.push('/login')
+
+            if( this.props.redirectTo ){
+                this.props.history.push('/login')
             }
 
         }, 2000);
@@ -37,4 +39,4 @@ class ToolTip extends Component {
     }
 }
 
-export default ToolTip;
+export default withRouter( ToolTip );

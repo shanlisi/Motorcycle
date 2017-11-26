@@ -6,24 +6,14 @@ import MyHeader from "../../components/MyHeader/MyHeader";
 import {myPost} from '../../api/index';
 export default class Login extends Component{
     logon=()=>{
-        /*$.ajax({
-            url:'',
-            type:'post',
-            data:{
-                user:username.value,
-                pass:password.value
-            },
-            success(result){
-                console.log(result);
-            }
-        });*/
+
         myPost('/login',{
             userName:username.value,
             password:password.value
         }).then(res=>{
             if(res.code==0){
                 /*window.location.href='http://localhost:8555/#/';*/
-                this.props.history.goBack();
+                this.props.history.push('/mine');
                 cookie.set("USER",JSON.stringify(res));
             }else if(res.code==1){
                 alert(res.error);
