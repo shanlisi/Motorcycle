@@ -1,39 +1,338 @@
-##项目注意事项
-> css样式
-- 使用rem，即设计稿尺寸除以100
-- 每个组建中，html都放在<div className='my-container'> 元素下
-- 组建最外层样式名以自己组件名 .my-组件名 命令，使用less，其他样式全部放在这个样式中，避免样式全局污染
-增加 captain 分支
+##描述
+> 摩托商城是学习react时期写的一个项目。主要实现的功能:
+>首页：关于摩托新闻的资讯页。实现了轮播图、新闻列表的下拉刷新和上拉分页加载功能，而且我们也加上了动画。
+>商城页：摩托商品列表。同样实现了上拉分页加载功能和动画。并且该页可以对商品进行搜索，排序等功能。
+>商品详情：每一件摩托商品的详情页。实现了轮播图，商品加入购物车，选择分类，检测登录态等功能
+>购物车：用户加入购物车中的商品会在这里显示。实现了对商品的增删改的功能，可以进行全选和反选，并且选择商品，总价同时变化。
+>个人中心：验证登录态，从后台获取个人信息，对个人信息的增删改等功能。
+>登录和注册：实现了对注册账号时的本地验证功能，如手机号、密码等
 
-### 商品详情页
-不需要反问权限验证 游客和登录用户均可以访问
-根据路由跳转路径的中的路由参数来确定当前要展示的商品 比如 /detail/:productId 
-在组件挂载之后向服务端发送请求 并将商品 ID 发送至服务端 获取商品数据 并将商品数据保存至组件的状态中
-#### 商品的字段
-+ 商品 id id [Number]
-+ 商品名称 productName [String]
-+ 商品单价 productPrice [Number]
-+ 商品已售数量 selledAmount [Number]
-+ 商品上架时间 addTime  [Number]
-+ 商品图片 pictures [Array] 
-+ 商品描述 desc [Array]     [ url1, url2, url3 ]
-+ 商品卖家 seller [String]
-+ 商品型号 typeModel [Array]  比如 [ { type: "红色", hasSelected: false },  { type: "绿色", hasSelected: false }  ] 
-+ 商品库存 inventory [Number]
-+ 卖家地址 sellerAddress [String]
-+ 卖家好评率 commentRate [Number] 50-100 之间的整数
+### 主要技术栈：
+- react
+- react-router
+- react-swipe
+- node.js
+- express
 
-### 用户购物车页
-需要访问权限验证 未登录用户没有购物车 购物车是一个数组
-底部结算栏 对所有选中的商品进行价格统计
-####　购物车中的每一个商品需要的字段
-+ 商品名称 productName [String]
-+ 商品型号 type [String]
-+ 购买数量 quantity [Number] default 1
-+ 小计 subtotal [Number] quantity * productPrice
+##如何运行
+下载项目：
+```
+git clone `https://github.com/shanlisi/Motorcycle.git
+```
+进入项目文件夹，安装依赖
+```
+npm install
+```
+进入server目录，启动sever服务，即运行server.js
 
-测试用例
+在项目跟文件下，启动前端开发服务：
+```
+npm run dev
+```
+###后台接口
+#### 1.获取首页轮播图
+```
+地址:/home/swipers
+类型:GET
+返回结果：
+{
+    code:0/1 //0:成功 1:失败[Number]
+    swipers:[
+        {
+        title:'标题',[String]
+        image:'图片地址',[String]
+        url:'跳转路径',[String]
+        }
+    ...]
+}
+```
+#### 2.获取首页列表
+```
+地址:/home/articleList?offset=0&limit=10
+    offset:获取数据数组的起始量，默认0
+    limit:每次获取数据的数量，默认10
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    hsaMore:true/false,//是否有更多数据[Boolean]
+    articleList:[
+        {
+        title:'标题',[String]
+        image:'图片地址',[String]
+        url:'跳转路径',[String]
+        date:'发布时间',[String]
+        num:'评价数量',[String]
+        flag:'分类',[String]
+        }
+    ...]
+}
+```
+#### 3.获取商品列表
+```
+地址:/productList/getList?offset=0&limit=10
+    offset:获取数据数组的起始量，默认0
+    limit:每次获取数据的数量，默认5
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    hsaMore:true/false,//是否有更多数据[Boolean]
+    productList:[
+        {
+        id:'商品id',[Number]
+        title:'标题',[String]
+        image:'图片地址',[String]
+        date:'上架时间',[String]
+        price:'价格',[Number]
+        hot:'热度',[Number]
+        }
+    ...]
+}
+```
+#### 4.筛选商品列表
+```
+地址:/productList/filterList?value=本田
+    value:'用户的检索字段'
+    注意：value值不要加引号
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    productList:[
+        {
+        id:'商品id',[Number]
+        title:'标题',[String]
+        image:'图片地址',[String]
+        date:'上架时间',[String]
+        price:'价格',[Number]
+        hot:'热度',[Number]
+        }
+    ...]
+}
+```
+#### 5.获取商品详情
+```
+地址:/productDetail/productId
+    productId:数字，表示商品id
+类型:GET
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    product:
+        {
+        name:'商品名',[String]
+        price:'单价',[Number]
+        soldNum:'已售数量',[Number]
+        date:'上架时间',[String]
+        inventory:'库存',[Number]
+        seller:{
+            name:'商家名',[String]
+            location:'所在地',[String]
+            favorableRate:'好评率'[String]
+            }
+        
+        typeModel:{
+           color:['亮蓝色',...]颜色[Array]
+        },
+        swiperImages:['localhost...',...]轮播图照片[Array]
+        descImages:['localhost...',...]详情照片[Array]
+        }
+}
+```
+#### 6.获取用户购物车信息
+```
+地址:/shoppingCart/userId
+    userId:用户ID ，数字
+类型:GET
 
-王梦雅测试用例
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'用户是否登录',[Boolean]
+    cartInfo:[{
+        id:'商品id',[Number]
+        image:'商品图片地址'[String]
+        name:'商品名',[String]
+        price:'商品价格',[Number]
+        num:'商品数量',[Number]
+        typeModel:'商品型号类别'[String]
+    },...]
+}
+```
 
-测试l
+#### 7.加入购物车
+```
+地址:/shoppingCart
+类型:POST
+请求体参数:{
+    userId:'用户id',[Number]
+    cartInfo:{
+        productId:'商品id',[Number]
+        name:'商品名',[String]
+        price:'商品价格',[Number]
+        num:'商品数量',[Number]
+        typeModel:'颜色+型号'[String]
+    }
+}
+返回结果：返回添加后用户购物车列表
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'用户是否登录',[Boolean]
+    cartInfo:[{
+        productId:'商品id',[Number]
+        image:'商品图片地址'[String]
+        name:'商品名',[String]
+        price:'商品价格',[Number]
+        num:'商品数量',[Number]
+        typeModel:'颜色+型号'[String]
+    },...]
+}
+```
+#### 8.删除购物车中某一件商品
+```
+地址:/shoppingCart
+类型DELETE
+请求体参数:{
+    userId:'用户id',[Number]
+    cartInfo:{
+        productId:'商品id',[Number]
+        typeModel:'颜色+类型'[String]
+    }
+}
+返回结果：删除后的用户购物车列表
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'用户是否登录',[Boolean]
+    cartInfo:[{
+        productId:'商品id',[Number]
+        image:'商品图片地址'[String]
+        name:'商品名',[String]
+        price:'商品价格',[Number]
+        num:'商品数量',[Number]
+        typeModel:'颜色+型号'[String]
+    },...]
+}
+```
+#### 9.修改购物车商品数量
+```
+地址:/shoppingCart
+类型PUT
+请求体参数:{
+  userId:'用户id',[Number]
+  cartInfo:{
+      productId:'商品id',[Number]
+      typeModel:'颜色+类型'[String]
+      num:商品数量
+  }
+}
+返回结果：修改后的用户购物车列表
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'用户是否登录',[Boolean]
+    cartInfo:[{
+        productId:'商品id',[Number]
+        image:'商品图片地址'[String]
+        name:'商品名',[String]
+        price:'商品价格',[Number]
+        num:'商品数量',[Number]
+        typeModel:'颜色+型号'[String]
+    },...]
+}
+```
+#### 10.获取用户信息
+```
+地址:/user/userId
+    userId:用户ID ，数字
+类型:GET
+
+返回结果：用户信息
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:true/false'是否登录'[Boolean]
+    userInfo{
+        userId:'用户id',[Number]
+        userName:'用户名',[String]
+        phone:'手机号',[Number]
+        sex:'性别',[String]
+        mail:'邮箱',[String]
+        desc:'简介',[String]
+        address:'地址',[Array]
+        orderForms:'订单',[Array]
+    }
+}
+```
+
+#### 11.修改用户信息
+```
+地址:/user
+类型:PUT
+请求体参数:{
+      userId:'用户id',[Number]【必填】
+      userName:'用户名',[String]【从这以下选填】
+      phone:'手机号',[Number]
+      sex:'性别',[String]
+      mail:'邮箱',[String]
+      desc:'简介',[String]
+      address:'地址',[Array]
+      orderForms:'订单',[Array]
+}
+返回结果：新的用户信息
+{
+    code:0/1, //0:成功 1:失败[Number]
+    login:'是否登录'false,[Boolean]
+    {
+        userId:'用户id',[Number]
+        userName:'用户名',[String]
+        phone:'手机号',[Number]
+        sex:'性别',[String]
+        mail:'邮箱',[String]
+        desc:'简介',[String]
+        address:'地址',[Array]
+        orderForms:'订单',[Array]
+    }
+}
+```
+
+#### 11(新增)
+地址:/logout
+类型:GET
+发送该请求退出登录态
+
+#### 12.注册
+```
+地址:/signUp
+类型POST
+请求体参数:{
+    userName:'用户名',[String]
+    password:'密码'[String]
+    phone:'手机号',[Number]
+}
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    success:'注册成功',[String]
+    error:'注册失败，用户名重复'[String]
+}
+```
+#### 13.登录
+```
+地址:/login
+类型POST
+请求体参数:{
+    userName:'用户名',[String]
+    password:'密码'[String]
+}
+返回结果：
+{
+    code:0/1, //0:成功 1:失败[Number]
+    success:'登录成功',[String]
+    userId:'用户id',[Number]
+    error:'登录失败，用户名或密码错误'[String]
+}
+```
+
+
+```$xslt
+[{"id":1,"userName":"shanlisi","password":"19940319","phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":2,"userName":"shanlisi1","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":3,"userName":"shanlisi2","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":4,"userName":"123","password":"123456","phone":"12345678901","sex":"man","mail":"","desc":"","address":[],"orderForms":[]}]
+```

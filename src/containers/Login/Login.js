@@ -4,6 +4,8 @@ import cookie from './cookie';
 import './Login.less'
 import MyHeader from "../../components/MyHeader/MyHeader";
 import {myPost} from '../../api/index';
+import image from  '../../images/tubiao.jpg'
+
 export default class Login extends Component{
     logon=()=>{
 
@@ -28,7 +30,7 @@ export default class Login extends Component{
                 <div className='my-container login'>
                     <div className="content">
                         <div className="pic">
-                            <img src="http://localhost:3000/public/images/productList/list-id-4.jpg" alt=""/>
+                            <img src={image} alt=""/>
                         </div>
                         <div className="input">
                             <span>用户名：</span>
