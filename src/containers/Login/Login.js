@@ -14,7 +14,8 @@ export default class Login extends Component{
         }).then(res=>{
             if(res.code==0){
                 cookie.set("USER",JSON.stringify(res));
-                this.props.history.goBack();
+                this.props.history.push('mine');
+
             }else if(res.code==1){
                 alert(res.error);
             }
