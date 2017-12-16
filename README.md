@@ -342,8 +342,3 @@ npm run dev
     error:'登录失败，用户名或密码错误'[String]
 }
 ```
-
-
-```$xslt
-[{"id":1,"userName":"shanlisi","password":"19940319","phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":2,"userName":"shanlisi1","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":3,"userName":"shanlisi2","password":19940319,"phone":"","sex":"man","mail":"","desc":"","address":[],"orderForms":[]},{"id":4,"userName":"123","password":"123456","phone":"12345678901","sex":"man","mail":"","desc":"","address":[],"orderForms":[]}]
-```
