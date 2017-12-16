@@ -14,18 +14,19 @@
 - node.js
 - express
 
-##如何运行
-下载项目：
+## 如何运行
+
+- 下载项目
 ```
 git clone `https://github.com/shanlisi/Motorcycle.git
 ```
-进入项目文件夹，安装依赖
+- 进入项目文件夹，安装依赖
 ```
 npm install
 ```
-进入server目录，启动sever服务，即运行server.js
+- 进入server目录，启动sever服务，即运行server.js
 
-在项目跟文件下，启动前端开发服务：
+- 在项目跟文件下，启动前端开发服务：
 ```
 npm run dev
 ```
