@@ -8,15 +8,13 @@ import image from  '../../images/tubiao.jpg'
 
 export default class Login extends Component{
     logon=()=>{
-
         myPost('/login',{
-            userName:username.value,
-            password:password.value
+            userName:this.userName.value,
+            password:this.password.value
         }).then(res=>{
             if(res.code==0){
-                /*window.location.href='http://localhost:8555/#/';*/
-                this.props.history.push('/mine');
                 cookie.set("USER",JSON.stringify(res));
+                this.props.history.goBack();
             }else if(res.code==1){
                 alert(res.error);
             }
@@ -34,11 +32,11 @@ export default class Login extends Component{
                         </div>
                         <div className="input">
                             <span>用户名：</span>
-                            <input type="text" placeholder="请输入用户名/手机号" id="username"/>
+                            <input type="text" placeholder="请输入用户名/手机号" ref={input=>this.userName=input}/>
                         </div>
                         <div className="input">
                             <span>密码：</span>
-                            <input type="password" placeholder="请输入密码" id="password"/>
+                            <input type="password" placeholder="请输入密码" ref={input=>this.password=input}/>
                         </div>
                         <div className="button" onClick={this.logon}>登录</div>
                         <div className="signup">

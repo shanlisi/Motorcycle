@@ -119,6 +119,7 @@ export default class ShoppingCart extends Component {
         if ( action == "add" ) {
             targetProduct.num += 1;
         } else if ( action == "minus" ) {
+            if( targetProduct.num===1){return}
             targetProduct.num -= 1;
         }
 
@@ -133,7 +134,6 @@ export default class ShoppingCart extends Component {
         };
 
         myPut( "/shoppingcart", changeNumData ).then( ( response ) => {
-            console.log( response );
             if ( response.code === 0 && response.login ) {
                 let totalPrice = this.computedTotalPrice( this.state.cart );
 

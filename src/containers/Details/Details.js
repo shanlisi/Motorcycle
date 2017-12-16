@@ -94,8 +94,6 @@ class Details extends Component {
         // 将当前商品添加到用户的购物车
         myPost( "/shoppingCart", data ).then( ( response ) => {
 
-            console.log( response );
-
             // 商品添加成功 并且用户已经登录
             if ( response.code === 0 && response.login ) {
                 this.setState( { addedSuccess: !this.state.addedSuccess, isSelectPanelShow: !this.state.isSelectPanelShow } )

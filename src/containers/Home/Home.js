@@ -64,12 +64,7 @@ export default class Home extends Component {
     };
 
     componentDidMount() {
-
         this.loadMore();
-        this.refresh()();
-
-        /* //上拉加载
-         upMore(this.homeContainer, this.loadMore(), this.state.is);*/
         //下拉刷新
         downRefresh(this.homeContainer, this.refresh())
     }
@@ -77,8 +72,6 @@ export default class Home extends Component {
     //上拉加载
     handleScroll = (event) => {
         if (this.state.timerId) clearTimeout(this.state.timerId);
-        console.log(!this.state.hasMore);
-        console.log(this.state.loading);
         if (!this.state.hasMore || this.state.loading) {
             return
         }
@@ -102,7 +95,7 @@ export default class Home extends Component {
         return (
             <div>
                 <MyHeader showBack={false} title="资讯"/>
-                <div className="home-refresh"></div>
+                <div className="home-refresh"> </div>
                 <div className='my-container' ref={el => this.homeContainer = el} onScroll={this.handleScroll}>
                     <Slider/>
                     <ArticleList articleList={this.state.articleList}/>
